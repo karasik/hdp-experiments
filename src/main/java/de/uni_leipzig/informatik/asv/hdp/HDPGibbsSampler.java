@@ -42,7 +42,7 @@ public class HDPGibbsSampler implements Serializable
 		return s.words.length > 500;
 	}
 
-	private static final long serialVersionUID = -5345762394934530531L;
+	private static final long serialVersionUID = 1L;
 	public double beta = 0.5; // default only
 	public double gamma = 1.5;
 	public double alpha = 1.0;
@@ -398,6 +398,10 @@ public class HDPGibbsSampler implements Serializable
 	class DOCState implements Serializable
 	{
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
 		int docID, documentLength, numberOfTables;
 		int[] tableToTopic;
 		int[] wordCountByTable;

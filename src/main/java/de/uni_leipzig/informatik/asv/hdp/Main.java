@@ -48,9 +48,49 @@ public class Main
 			out.close();
 		}
 
-		String topWordsByTopic = "data/TopWordsByTopic.txt";
 		String documentToTopicAssignment = "data/DocumentToTopicAssignment.txt";
 
+		printTopWordsByTopicFile(hdp, corpus, "data/TopWordsByTopic.txt");
+		printDocumentToTopicAssignment(hdp, corpus, documentToTopicAssignment);
+
+	}
+
+	private static void printDocumentToTopicAssignment(HDPGibbsSampler hdp,
+			CLDACorpus corpus, String documentToTopicAssignment)
+			throws IOException
+	{
+		PrintStream file = new PrintStream(documentToTopicAssignment);
+		for (DOCState d : hdp.docStates)
+		{
+			file.print(d.resolveTopic() + ") ");
+
+			for (WordState w : d.words)
+				file.print(corpus.getWordStrings()[w.termIndex] + " ");
+			file.println();
+		}
+		file.close();
+
+	}
+
+	private static class WordCount implements Serializable
+	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		public int word;
+		public double prob;
+
+		public WordCount(int word, double prob)
+		{
+			this.word = word;
+			this.prob = prob;
+		}
+	}
+
+	private static void printTopWordsByTopicFile(HDPGibbsSampler hdp,
+			CLDACorpus corpus, String topWordsByTopic) throws IOException
+	{
 		PrintStream file = new PrintStream(topWordsByTopic);
 		int top = 10;
 		for (int t = 0; t < hdp.numberOfTopics; t++)
@@ -78,28 +118,5 @@ public class Main
 			file.println();
 		}
 		file.close();
-
-		file = new PrintStream(documentToTopicAssignment);
-		for (DOCState d : hdp.docStates)
-		{
-			file.print(d.resolveTopic() + ") ");
-
-			for (WordState w : d.words)
-				file.print(corpus.getWordStrings()[w.termIndex] + " ");
-			file.println();
-		}
-		file.close();
-	}
-
-	private static class WordCount implements Serializable
-	{
-		public int word;
-		public double prob;
-
-		public WordCount(int word, double prob)
-		{
-			this.word = word;
-			this.prob = prob;
-		}
 	}
 }
