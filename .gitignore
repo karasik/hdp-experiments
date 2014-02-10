@@ -1,0 +1,26 @@
+syntax: glob
+*.class
+.metadata
+.directory
+.keep
+.DS_Store
+*/\${builder}
+
+**/*.log*
+
+**/*.jar
+
+*/lib/*jar
+**/target
+**/.settings
+target
+bin
+*~
+*.orig
+.classpath
+.project
+.settings
+.cproject
+.Rhistory
+.Rapp.history
+data
