@@ -33,33 +33,31 @@ import de.uni_leipzig.informatik.asv.utils.WordAssignmentsWriter;
  */
 public class HDPGibbsSampler implements Serializable
 {
+	private static final int BIG_DOCUMENT_WORDS = 500;
 
-	/**
-	 * 
-	 */
 	private static boolean isDocumentAdditional(DOCState s)
 	{
-		return s.words.length > 500;
+		return s.words.length > BIG_DOCUMENT_WORDS;
 	}
 
 	private static final long serialVersionUID = 1L;
-	public double beta = 0.5; // default only
-	public double gamma = 1.5;
-	public double alpha = 1.0;
+	private double beta = 0.5; // default only
+	private double gamma = 1.5;
+	private double alpha = 1.0;
 
 	private Random random = new Random();
 	private double[] p;
 	private double[] f;
 
-	protected DOCState[] docStates;
-	protected int[] numberOfTablesByTopic;
-	protected int[] wordCountByTopic;
-	protected int[][] wordCountByTopicAndTerm;
+	public DOCState[] docStates;
+	public int[] numberOfTablesByTopic;
+	public int[] wordCountByTopic;
+	public int[][] wordCountByTopicAndTerm;
 
-	protected int sizeOfVocabulary;
-	protected int totalNumberOfWords;
-	protected int numberOfTopics = 1;
-	protected int totalNumberOfTables;
+	public int sizeOfVocabulary;
+	public int totalNumberOfWords;
+	public int numberOfTopics;
+	public int totalNumberOfTables;
 
 	/**
 	 * Initially assign the words to tables and topics
@@ -67,14 +65,16 @@ public class HDPGibbsSampler implements Serializable
 	 * @param corpus
 	 *            {@link CLDACorpus} on which to fit the model
 	 */
-	public void addInstances(int[][] documentsInput, int V)
+	public void addInstances(int[][] documentsInput, int V, String[] dates,
+			String[] authors)
 	{
 		sizeOfVocabulary = V;
 		totalNumberOfWords = 0;
+		numberOfTopics = 1;
 		docStates = new DOCState[documentsInput.length];
 		for (int d = 0; d < documentsInput.length; d++)
 		{
-			docStates[d] = new DOCState(documentsInput[d], d);
+			docStates[d] = new DOCState(documentsInput[d], d, dates[d], authors[d]);
 			totalNumberOfWords += documentsInput[d].length;
 		}
 		int k, i, j;
@@ -108,7 +108,6 @@ public class HDPGibbsSampler implements Serializable
 	 */
 	private void nextGibbsSweep()
 	{
-		int table;
 		for (int d = 0; d < docStates.length; d++)
 		{
 			for (int i = 0; i < docStates[d].documentLength; i++)
@@ -120,7 +119,7 @@ public class HDPGibbsSampler implements Serializable
 				else
 				{
 					removeWord(d, i); // remove the word i from the state
-					table = sampleTable(d, i);
+					int table = sampleTable(d, i);
 					if (table == docStates[d].numberOfTables) // new Table
 						addWord(d, i, table, sampleTopic()); // sampling its
 																// Topic
@@ -133,7 +132,7 @@ public class HDPGibbsSampler implements Serializable
 		defragment();
 	}
 
-	// What we should do for additional document
+	// What we should do for additional document (fictional)
 	private void sweepForAdditionalDocument(int d, int i)
 	{
 		final int table = 0; // fixed for additional document
@@ -248,7 +247,7 @@ public class HDPGibbsSampler implements Serializable
 	 * @param i
 	 *            the index of the word
 	 */
-	protected void removeWord(int docID, int i)
+	private void removeWord(int docID, int i)
 	{
 		DOCState docState = docStates[docID];
 		int table = docState.words[i].tableAssignment;
@@ -273,27 +272,27 @@ public class HDPGibbsSampler implements Serializable
 	 *            the index of the word
 	 * @param table
 	 *            the table to which the word is assigned to
-	 * @param k
+	 * @param topic
 	 *            the topic to which the word is assigned to
 	 */
-	protected void addWord(int docID, int i, int table, int k)
+	private void addWord(int docID, int i, int table, int topic)
 	{
 		DOCState docState = docStates[docID];
 		docState.words[i].tableAssignment = table;
 		docState.wordCountByTable[table]++;
-		wordCountByTopic[k]++;
-		wordCountByTopicAndTerm[k][docState.words[i].termIndex]++;
+		wordCountByTopic[topic]++;
+		wordCountByTopicAndTerm[topic][docState.words[i].termIndex]++;
 		if (docState.wordCountByTable[table] == 1)
 		{ // a new table is created
 			docState.numberOfTables++;
-			docState.tableToTopic[table] = k;
+			docState.tableToTopic[table] = topic;
 			totalNumberOfTables++;
-			numberOfTablesByTopic[k]++;
+			numberOfTablesByTopic[topic]++;
 			docState.tableToTopic = ensureCapacity(docState.tableToTopic,
 					docState.numberOfTables);
 			docState.wordCountByTable = ensureCapacity(
 					docState.wordCountByTable, docState.numberOfTables);
-			if (k == numberOfTopics)
+			if (topic == numberOfTopics)
 			{ // a new topic is created
 				numberOfTopics++;
 				numberOfTablesByTopic = ensureCapacity(numberOfTablesByTopic,
@@ -309,7 +308,7 @@ public class HDPGibbsSampler implements Serializable
 	/**
 	 * Removes topics from the bookkeeping that have no words assigned to
 	 */
-	protected void defragment()
+	private void defragment()
 	{
 		int[] kOldToKNew = new int[numberOfTopics];
 		int k, newNumberOfTopics = 0;
@@ -332,7 +331,7 @@ public class HDPGibbsSampler implements Serializable
 	/**
 	 * Permute the ordering of documents and words in the bookkeeping
 	 */
-	protected void doShuffle()
+	private void doShuffle()
 	{
 		List<DOCState> h = Arrays.asList(docStates);
 		Collections.shuffle(h);
@@ -345,21 +344,21 @@ public class HDPGibbsSampler implements Serializable
 		}
 	}
 
-	public static void swap(int[] arr, int arg1, int arg2)
+	private static void swap(int[] arr, int arg1, int arg2)
 	{
 		int t = arr[arg1];
 		arr[arg1] = arr[arg2];
 		arr[arg2] = t;
 	}
 
-	public static void swap(int[][] arr, int arg1, int arg2)
+	private static void swap(int[][] arr, int arg1, int arg2)
 	{
 		int[] t = arr[arg1];
 		arr[arg1] = arr[arg2];
 		arr[arg2] = t;
 	}
 
-	public static double[] ensureCapacity(double[] arr, int min)
+	private static double[] ensureCapacity(double[] arr, int min)
 	{
 		int length = arr.length;
 		if (min < length)
@@ -370,7 +369,7 @@ public class HDPGibbsSampler implements Serializable
 		return arr2;
 	}
 
-	public static int[] ensureCapacity(int[] arr, int min)
+	private static int[] ensureCapacity(int[] arr, int min)
 	{
 		int length = arr.length;
 		if (min < length)
@@ -381,7 +380,7 @@ public class HDPGibbsSampler implements Serializable
 		return arr2;
 	}
 
-	public static int[][] add(int[][] arr, int[] newElement, int index)
+	private static int[][] add(int[][] arr, int[] newElement, int index)
 	{
 		int length = arr.length;
 		if (length <= index)
@@ -398,18 +397,17 @@ public class HDPGibbsSampler implements Serializable
 	class DOCState implements Serializable
 	{
 
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
-		int docID, documentLength, numberOfTables;
-		int[] tableToTopic;
-		int[] wordCountByTable;
-		WordState[] words;
+		public int docID, documentLength, numberOfTables;
+		public int[] tableToTopic;
+		public int[] wordCountByTable;
+		public WordState[] words;
+		public String date, author;
 
-		public DOCState(int[] instance, int docID)
+		public DOCState(int[] instance, int docID, String date, String author)
 		{
 			this.docID = docID;
+			this.date = date;
 			numberOfTables = 0;
 			documentLength = instance.length;
 			words = new WordState[documentLength];
@@ -446,45 +444,22 @@ public class HDPGibbsSampler implements Serializable
 			for (WordState w : words)
 			{
 				int table = w.tableAssignment;
-				topicProp[tableToTopic[table]] += wordCountByTable[table];
+				topicProp[tableToTopic[table]]++;
 			}
-			List<Integer> candidates = new ArrayList<Integer>();
-			int max = topicProp[0];
-			candidates.add(0);
-			for (int t = 1; t < numberOfTopics; t++)
-			{
-				if (topicProp[t] > max)
-				{
-					max = topicProp[t];
-					candidates.clear();
-					candidates.add(t);
-				}
-				else if (topicProp[t] == max)
-				{
-					candidates.add(t);
-				}
-			}
-
-			return candidates.get(random.nextInt(candidates.size()));
+			return ProbUtils.sampleFromProportions(topicProp, random);
 		}
 	}
 
 	class WordState implements Serializable
 	{
-
-		/**
-		 * 
-		 */
 		private static final long serialVersionUID = 1L;
-		int termIndex;
-		int tableAssignment;
+		public int termIndex;
+		public int tableAssignment;
 
 		public WordState(int wordIndex, int tableAssignment)
 		{
 			this.termIndex = wordIndex;
 			this.tableAssignment = tableAssignment;
 		}
-
 	}
-
 }

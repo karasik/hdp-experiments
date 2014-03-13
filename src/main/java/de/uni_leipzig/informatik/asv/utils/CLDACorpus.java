@@ -10,24 +10,29 @@ import java.util.HashSet;
 
 public class CLDACorpus
 {
-
 	private int[][] documents;
 	private int vocabularySize = 0;
 	private String[] wordStrings;
+	private String[] dateList, authorsList;
 
 	public CLDACorpus(InputStream is) throws IOException
 	{
 		ArrayList<int[]> corpus = new ArrayList<int[]>();
+		ArrayList<String> dates = new ArrayList<String>();
+		ArrayList<String> authors = new ArrayList<String>();
 		BufferedReader in = new BufferedReader(new InputStreamReader(is));
 		HashMap<String, Integer> vocabulary = new HashMap<String, Integer>();
 		HashSet<String> distinctTweets = new HashSet<String>();
 		String line = null;
 		while ((line = in.readLine()) != null)
 		{
-			if (distinctTweets.contains(line))
+			String[] parts = line.split("\\|");
+			if (distinctTweets.contains(parts[0]))
 				continue;
-			distinctTweets.add(line);
-			String[] words = line.split(" ");
+			distinctTweets.add(parts[0]);
+			String[] words = parts[0].split(" ");
+			dates.add(parts[1]);
+			authors.add(parts[2]);
 			int[] doc = new int[words.length];
 			int index = 0;
 			for (String word : words)
@@ -46,6 +51,7 @@ public class CLDACorpus
 			}
 			corpus.add(doc);
 		}
+
 		documents = new int[corpus.size()][];
 		for (int i = 0; i < documents.length; i++)
 		{
@@ -57,6 +63,8 @@ public class CLDACorpus
 		{
 			wordStrings[vocabulary.get(s)] = s;
 		}
+		dateList = dates.toArray(new String[0]);
+		authorsList = authors.toArray(new String[0]);
 	}
 
 	public int[][] getDocuments()
@@ -72,5 +80,15 @@ public class CLDACorpus
 	public String[] getWordStrings()
 	{
 		return wordStrings;
+	}
+
+	public String[] getDateList()
+	{
+		return dateList;
+	}
+
+	public String[] getAuthorList()
+	{
+		return authorsList;
 	}
 }
