@@ -11,7 +11,7 @@ public class Document implements IDocument
 	public Document(String[] words, Integer topic, IDate date)
 	{
 		this.words = words;
-		this.topic = topic;
+		this.setTopic(topic);
 		this.date = date;
 	}
 
@@ -29,6 +29,11 @@ public class Document implements IDocument
 	{
 		return topic;
 	}
+	
+	public void setTopic(Integer topic)
+	{
+		this.topic = topic;
+	}
 
 	public IDate getDate()
 	{
@@ -38,9 +43,7 @@ public class Document implements IDocument
 	@Override
 	public String toString()
 	{
-		return "Document [words=" + Arrays.toString(words) + ", topic=" + topic
+		return "Document [words=" + Arrays.toString(words) + ", topic=" + getTopic()
 				+ ", date=" + date + "]";
 	}
-	
-	
 }

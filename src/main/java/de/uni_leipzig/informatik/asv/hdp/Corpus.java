@@ -41,11 +41,11 @@ public class Corpus implements ICorpus
 		for (IDocument document : documents)
 		{
 			if (document.getTopic() == null)
-				out.format("%s | %d %d | %s", MiscUtils.implode(" ",
+				out.format("%s | %d %d | %s\n", MiscUtils.implode(" ",
 						document.getWords()), document.getDate().getDay(),
 						document.getDate().getHour(), "Dowan");
 			else
-				out.format("%d) %s | %d %d | %s", document.getTopic(),
+				out.format("%d) %s | %d %d | %s\n", document.getTopic(),
 						MiscUtils.implode(" ", document.getWords()), document
 								.getDate().getDay(), document.getDate()
 								.getHour(), "Duvessa");

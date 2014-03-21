@@ -9,10 +9,10 @@ package de.uni_leipzig.informatik.asv.hdp;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import de.uni_leipzig.informatik.asv.utils.CLDACorpus;
@@ -49,15 +49,62 @@ public class HDPGibbsSampler implements Serializable
 	private double[] p;
 	private double[] f;
 
-	public DOCState[] docStates;
-	public int[] numberOfTablesByTopic;
-	public int[] wordCountByTopic;
-	public int[][] wordCountByTopicAndTerm;
+	private DOCState[] docStates;
+	private int[] numberOfTablesByTopic;
+	private int[] wordCountByTopic;
+	private int[][] wordCountByTopicAndTerm;
 
-	public int sizeOfVocabulary;
-	public int totalNumberOfWords;
-	public int numberOfTopics;
-	public int totalNumberOfTables;
+	private int sizeOfVocabulary;
+	private int totalNumberOfWords;
+	private int numberOfTopics;
+	private int totalNumberOfTables;
+
+	private ICorpus corpus;
+
+	public HDPGibbsSampler(ICorpus corpus)
+	{
+		addInstances(corpus);
+	}
+
+	public void run(int maxIter) throws IOException
+	{
+		run(0, maxIter, System.out);
+		setTopicsToCorpus();
+	}
+
+	private void addInstances(ICorpus corpus)
+	{
+		this.corpus = corpus;
+		Map<String, Integer> codesAssignment = CollectionUtils.newMap();
+
+		int[][] documents = new int[corpus.getDocuments().length][];
+		int code = 0;
+		for (int d = 0; d < corpus.getDocuments().length; d++)
+		{
+			documents[d] = new int[corpus.getDocuments()[d].getWords().length];
+			for (int w = 0; w < corpus.getDocuments()[d].getWords().length; w++)
+			{
+				String word = corpus.getDocuments()[d].getWords()[w];
+				if (codesAssignment.containsKey(word))
+				{
+					documents[d][w] = codesAssignment.get(word);
+				}
+				else
+				{
+					codesAssignment.put(word, code);
+					documents[d][w] = code++;
+				}
+			}
+		}
+
+		addInstances(documents, code);
+	}
+
+	private void setTopicsToCorpus()
+	{
+		for (int d = 0; d < docStates.length; d++)
+			corpus.getDocuments()[d].setTopic(docStates[d].resolveTopic());
+	}
 
 	/**
 	 * Initially assign the words to tables and topics
@@ -65,8 +112,7 @@ public class HDPGibbsSampler implements Serializable
 	 * @param corpus
 	 *            {@link CLDACorpus} on which to fit the model
 	 */
-	public void addInstances(int[][] documentsInput, int V, String[] dates,
-			String[] authors)
+	private void addInstances(int[][] documentsInput, int V)
 	{
 		sizeOfVocabulary = V;
 		totalNumberOfWords = 0;
@@ -74,7 +120,7 @@ public class HDPGibbsSampler implements Serializable
 		docStates = new DOCState[documentsInput.length];
 		for (int d = 0; d < documentsInput.length; d++)
 		{
-			docStates[d] = new DOCState(documentsInput[d], d, dates[d], authors[d]);
+			docStates[d] = new DOCState(documentsInput[d], d);
 			totalNumberOfWords += documentsInput[d].length;
 		}
 		int k, i, j;
@@ -226,7 +272,7 @@ public class HDPGibbsSampler implements Serializable
 	 *            {@link TopicsWriter}
 	 * @throws IOException
 	 */
-	public void run(int shuffleLag, int maxIter, PrintStream log)
+	private void run(int shuffleLag, int maxIter, PrintStream log)
 			throws IOException
 	{
 		for (int iter = 0; iter < maxIter; iter++)
@@ -394,7 +440,7 @@ public class HDPGibbsSampler implements Serializable
 		return arr;
 	}
 
-	class DOCState implements Serializable
+	private class DOCState implements Serializable
 	{
 
 		private static final long serialVersionUID = 1L;
@@ -402,12 +448,10 @@ public class HDPGibbsSampler implements Serializable
 		public int[] tableToTopic;
 		public int[] wordCountByTable;
 		public WordState[] words;
-		public String date, author;
 
-		public DOCState(int[] instance, int docID, String date, String author)
+		public DOCState(int[] instance, int docID)
 		{
 			this.docID = docID;
-			this.date = date;
 			numberOfTables = 0;
 			documentLength = instance.length;
 			words = new WordState[documentLength];
@@ -450,7 +494,7 @@ public class HDPGibbsSampler implements Serializable
 		}
 	}
 
-	class WordState implements Serializable
+	private class WordState implements Serializable
 	{
 		private static final long serialVersionUID = 1L;
 		public int termIndex;

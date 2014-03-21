@@ -6,5 +6,8 @@ public interface IDocument
 
 	public Integer getTopic();
 
+	public void setTopic(Integer topic);
+	
 	public IDate getDate();
+
 }
