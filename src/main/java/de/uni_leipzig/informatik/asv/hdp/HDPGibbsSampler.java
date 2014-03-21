@@ -15,9 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import de.uni_leipzig.informatik.asv.utils.CLDACorpus;
-import de.uni_leipzig.informatik.asv.utils.TopicsWriter;
-import de.uni_leipzig.informatik.asv.utils.WordAssignmentsWriter;
+import de.uni_leipzig.informatik.asv.utils.CollectionUtils;
+import de.uni_leipzig.informatik.asv.utils.ProbUtils;
 
 /**
  * Hierarchical Dirichlet Processes Chinese Restaurant Franchise Sampler

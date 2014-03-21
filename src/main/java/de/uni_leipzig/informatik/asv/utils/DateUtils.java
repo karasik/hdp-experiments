@@ -1,4 +1,7 @@
-package de.uni_leipzig.informatik.asv.hdp;
+package de.uni_leipzig.informatik.asv.utils;
+
+import de.uni_leipzig.informatik.asv.hdp.Date;
+import de.uni_leipzig.informatik.asv.hdp.IDate;
 
 public class DateUtils
 {

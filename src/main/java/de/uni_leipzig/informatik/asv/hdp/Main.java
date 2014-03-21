@@ -13,8 +13,9 @@ public class Main
 		// hdp.run(50);
 		// corpus.save(Filename.DOCUMENT_TO_TOPIC_ASSIGNMENT);
 
-		System.out.println(Arrays.toString(FrequencyOverWords.getFromCorpusWithTfIdf(
-				corpus, null, new Date(26, 05), 1).getTopWords(15)));
+		System.out.println(Arrays.toString(FrequencyOverWords
+				.getFromCorpusWithTfIdf(corpus, null, new Date(26, 05), 1)
+				.getTopWords(15)));
 
 		FrequencyOverTime freq = new FrequencyOverTime(corpus, null);
 		freq.save(Filename.PLOT_OUTPUT);

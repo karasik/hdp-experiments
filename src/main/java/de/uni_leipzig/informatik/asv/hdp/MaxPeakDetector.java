@@ -5,6 +5,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import de.uni_leipzig.informatik.asv.utils.CollectionUtils;
+import de.uni_leipzig.informatik.asv.utils.DateUtils;
+
 public class MaxPeakDetector implements IPeakDetector
 {
 	private int numberOfPeaks;
@@ -30,8 +33,6 @@ public class MaxPeakDetector implements IPeakDetector
 				return b.second - a.second;
 			}
 		});
-
-		int n = Math.min(numberOfPeaks, list.size());
 
 		List<IDate> result = CollectionUtils.newList();
 		for (Pair<IDate, Integer> pair : list)

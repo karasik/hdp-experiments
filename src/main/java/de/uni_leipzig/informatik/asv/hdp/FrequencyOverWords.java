@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 
+import de.uni_leipzig.informatik.asv.utils.DateUtils;
+
 public class FrequencyOverWords
 {
 	private HashMap<String, Double> prop;

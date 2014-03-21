@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.List;
 
+import de.uni_leipzig.informatik.asv.utils.CollectionUtils;
+import de.uni_leipzig.informatik.asv.utils.MiscUtils;
+
 public class Corpus implements ICorpus
 {
 

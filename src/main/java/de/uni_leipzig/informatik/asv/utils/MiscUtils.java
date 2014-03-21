@@ -1,4 +1,4 @@
-package de.uni_leipzig.informatik.asv.hdp;
+package de.uni_leipzig.informatik.asv.utils;
 
 public class MiscUtils
 {

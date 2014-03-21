@@ -4,17 +4,16 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Map;
 
+import de.uni_leipzig.informatik.asv.utils.CollectionUtils;
+import de.uni_leipzig.informatik.asv.utils.DateUtils;
+
 public class FrequencyOverTime
 {
-	private int offset;
 	private int[] frequency;
 	private Map<IDate, Integer> mapping;
 
 	public FrequencyOverTime(ICorpus corpus, Integer topic)
 	{
-		IDate first = corpus.getDocuments()[0].getDate();
-		offset = first.getDay() * 24 + first.getHour();
-
 		IDate last = corpus.getDocuments()[corpus.getDocuments().length - 1]
 				.getDate();
 		frequency = new int[DateUtils.toCode(last) + 1];
