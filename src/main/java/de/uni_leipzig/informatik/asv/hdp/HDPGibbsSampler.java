@@ -54,7 +54,6 @@ public class HDPGibbsSampler implements Serializable
 	private int[][] wordCountByTopicAndTerm;
 
 	private int sizeOfVocabulary;
-	private int totalNumberOfWords;
 	private int numberOfTopics;
 	private int totalNumberOfTables;
 
@@ -76,14 +75,14 @@ public class HDPGibbsSampler implements Serializable
 		this.corpus = corpus;
 		Map<String, Integer> codesAssignment = CollectionUtils.newMap();
 
-		int[][] documents = new int[corpus.getDocuments().length][];
+		int[][] documents = new int[corpus.getDocuments().size()][];
 		int code = 0;
-		for (int d = 0; d < corpus.getDocuments().length; d++)
+		for (int d = 0; d < corpus.getDocuments().size(); d++)
 		{
-			documents[d] = new int[corpus.getDocuments()[d].getWords().length];
-			for (int w = 0; w < corpus.getDocuments()[d].getWords().length; w++)
+			documents[d] = new int[corpus.getDocuments().get(d).getWords().length];
+			for (int w = 0; w < corpus.getDocuments().get(d).getWords().length; w++)
 			{
-				String word = corpus.getDocuments()[d].getWords()[w];
+				String word = corpus.getDocuments().get(d).getWords()[w];
 				if (codesAssignment.containsKey(word))
 				{
 					documents[d][w] = codesAssignment.get(word);
@@ -102,7 +101,7 @@ public class HDPGibbsSampler implements Serializable
 	private void setTopicsToCorpus()
 	{
 		for (int d = 0; d < docStates.length; d++)
-			corpus.getDocuments()[d].setTopic(docStates[d].resolveTopic());
+			corpus.getDocuments().get(d).setTopic(docStates[d].resolveTopic());
 	}
 
 	/**
@@ -114,13 +113,11 @@ public class HDPGibbsSampler implements Serializable
 	private void addInstances(int[][] documentsInput, int V)
 	{
 		sizeOfVocabulary = V;
-		totalNumberOfWords = 0;
 		numberOfTopics = 1;
 		docStates = new DOCState[documentsInput.length];
 		for (int d = 0; d < documentsInput.length; d++)
 		{
 			docStates[d] = new DOCState(documentsInput[d], d);
-			totalNumberOfWords += documentsInput[d].length;
 		}
 		int k, i, j;
 		DOCState docState;
@@ -279,8 +276,9 @@ public class HDPGibbsSampler implements Serializable
 			if ((shuffleLag > 0) && (iter > 0) && (iter % shuffleLag == 0))
 				doShuffle();
 			nextGibbsSweep();
-			log.println("iter = " + iter + " #topics = " + numberOfTopics
-					+ ", #tables = " + totalNumberOfTables);
+			if (iter % 10 == 0)
+				log.println("iter = " + iter + " #topics = " + numberOfTopics
+						+ ", #tables = " + totalNumberOfTables);
 		}
 	}
 

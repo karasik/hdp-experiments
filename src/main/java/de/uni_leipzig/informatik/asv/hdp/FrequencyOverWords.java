@@ -3,6 +3,7 @@ package de.uni_leipzig.informatik.asv.hdp;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 import de.uni_leipzig.informatik.asv.utils.DateUtils;
 
@@ -60,13 +61,13 @@ public class FrequencyOverWords
 	{
 		WordProp[] result = getTopWordsExtended(top);
 		String[] strings = new String[result.length];
-		
-		for (int i=0; i<result.length; i++)
+
+		for (int i = 0; i < result.length; i++)
 			strings[i] = result[i].word;
-		
+
 		return strings;
 	}
-	
+
 	public WordProp[] getTopWordsExtended(int top)
 	{
 		WordProp[] result = new WordProp[prop.size()];
@@ -82,16 +83,15 @@ public class FrequencyOverWords
 				return Double.valueOf(b.prop).compareTo(a.prop);
 			}
 		});
-		
+
 		return Arrays.copyOf(result, Math.min(result.length, top));
 	}
-
 
 	public static FrequencyOverWords getFromCorpus(ICorpus corpus,
 			Integer topic, IDate date, int radius)
 	{
 		FrequencyOverWords result = new FrequencyOverWords();
-		IDocument[] documents = corpus.getDocuments();
+		List<IDocument> documents = corpus.getDocuments();
 
 		for (IDocument document : documents)
 			if ((null == topic || topic.equals(document.getTopic()))

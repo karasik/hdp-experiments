@@ -60,4 +60,10 @@ public class Date implements IDate
 		return true;
 	}
 
+	@Override
+	public String toShortString()
+	{
+		return "(" + day + "-" + hour + ")";
+	}
+
 }

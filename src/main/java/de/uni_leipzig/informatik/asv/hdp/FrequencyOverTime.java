@@ -14,8 +14,8 @@ public class FrequencyOverTime
 
 	public FrequencyOverTime(ICorpus corpus, Integer topic)
 	{
-		IDate last = corpus.getDocuments()[corpus.getDocuments().length - 1]
-				.getDate();
+		IDate last = corpus.getDocuments()
+				.get(corpus.getDocuments().size() - 1).getDate();
 		frequency = new int[DateUtils.toCode(last) + 1];
 
 		for (IDocument document : corpus.getDocuments())

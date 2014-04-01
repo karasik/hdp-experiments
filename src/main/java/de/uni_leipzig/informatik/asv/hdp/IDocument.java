@@ -9,5 +9,6 @@ public interface IDocument
 	public void setTopic(Integer topic);
 	
 	public IDate getDate();
-
+	
+	public boolean isAdditional();
 }

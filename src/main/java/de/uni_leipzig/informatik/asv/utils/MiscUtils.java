@@ -1,5 +1,7 @@
 package de.uni_leipzig.informatik.asv.utils;
 
+import de.uni_leipzig.informatik.asv.hdp.WordProp;
+
 public class MiscUtils
 {
 	// Prevent instantiating.
@@ -18,5 +20,14 @@ public class MiscUtils
 			return sb.toString();
 		}
 		return "";
+	}
+
+	public static void normalize(WordProp[] prop)
+	{
+		double sum = 0.0;
+		for (WordProp wp : prop)
+			sum += wp.prop;
+		for (WordProp wp : prop)
+			wp.prop /= sum;
 	}
 }

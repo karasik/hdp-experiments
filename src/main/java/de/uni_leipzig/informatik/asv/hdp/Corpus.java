@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 
 import de.uni_leipzig.informatik.asv.utils.CollectionUtils;
@@ -18,7 +19,7 @@ public class Corpus implements ICorpus
 	 * [THEME) ]WORD1 WORD2 ... WORDN | DAY HOUR | AUTHOR
 	 */
 
-	private IDocument[] documents;
+	private List<IDocument> documents;
 
 	public Corpus(String filename)
 	{
@@ -64,7 +65,7 @@ public class Corpus implements ICorpus
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				new FileInputStream(filename)));
 
-		List<IDocument> documents = CollectionUtils.newList();
+		documents = CollectionUtils.newList();
 		while (in.ready())
 		{
 			String line = in.readLine();
@@ -76,14 +77,10 @@ public class Corpus implements ICorpus
 		}
 
 		in.close();
-
-		this.documents = new IDocument[documents.size()];
-		for (int i = 0; i < documents.size(); i++)
-			this.documents[i] = documents.get(i);
 	}
 
 	@Override
-	public IDocument[] getDocuments()
+	public List<IDocument> getDocuments()
 	{
 		return documents;
 	}
@@ -112,6 +109,25 @@ public class Corpus implements ICorpus
 			if (line.indexOf(")") >= 0)
 				return Integer.parseInt(line.split("\\)")[0]);
 			return null;
+		}
+	}
+
+	@Override
+	public void addAdditionalDocument(IDocument document)
+	{
+		documents.add(0, document);
+	}
+
+	@Override
+	public void clearAdditionalDocuments()
+	{
+		for (Iterator<IDocument> it = documents.iterator(); it.hasNext();)
+		{
+			IDocument document = it.next();
+			if (document.isAdditional())
+				it.remove();
+			else
+				break;
 		}
 	}
 }
