@@ -12,6 +12,11 @@ public class FrequencyOverTime
 	private int[] frequency;
 	private Map<IDate, Integer> mapping;
 
+	public FrequencyOverTime(ICorpus corpus)
+	{
+		this(corpus, null);
+	}
+	
 	public FrequencyOverTime(ICorpus corpus, Integer topic)
 	{
 		IDate last = corpus.getDocuments()

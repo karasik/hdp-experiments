@@ -2,18 +2,24 @@ package de.uni_leipzig.informatik.asv.hdp;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import de.uni_leipzig.informatik.asv.utils.CollectionUtils;
 import de.uni_leipzig.informatik.asv.utils.DateUtils;
 
 public class FrequencyOverWords
 {
-	private HashMap<String, Double> prop;
+	private Map<String, Double> prop;
+
+	public FrequencyOverWords(Map<String, Double> prop)
+	{
+		this.prop = prop;
+	}
 
 	public FrequencyOverWords()
 	{
-		prop = new HashMap<String, Double>();
+		prop = CollectionUtils.newMap();
 	}
 
 	public void add(String word)
