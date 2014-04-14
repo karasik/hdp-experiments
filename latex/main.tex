@@ -3,6 +3,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
 \usepackage{graphicx}
+\usepackage{xcolor}
 \usepackage{wrapfig}
 \usepackage{float}
 \usepackage{geometry}
@@ -23,6 +24,8 @@
 \clubpenalty=10000
 \widowpenalty=10000
 \usepackage[T2A]{fontenc}
+
+\newcommand\todo[1]{\marginpar{\textcolor{red}{#1}}}
 
 \begin{document}
   \section{Введение}
@@ -49,7 +52,7 @@
   
   Объект изучения этой работы --- алгоритм, который по входным данным строит множество событий. В качестве данных для задач подобного рода служит мультимножество документов (сообщений) $\left\{D_i \,\vert\, i \in \overline{1,n} \right\}$. Будем считать что каждый документ имеет временную метку. Документ $D_i$ определяется как упорядоченный набор слов $ \left\{ w_j \,\vert\, w_j \in D_i \right\} $. При этом слова в документах принадлежат некоторому словарю $V$. 
   
-  Событие --- некоторая сущность, которая характеризуется временем возникновения и ключевыми словами. Оно вызывает резкий подъем частотных характеристик некоторых слов. Событием может быть футбольный матч и музыкальный концерт. В социальной сети Твиттер есть темы, которые всегда популярны. Например это сообщения с ключевыми словами iphone и ipad. Но такие сообщения нельзя считать событиями. Также событиями нельзя считать еженедельные пятничные сообщения о конце рабочей недели\cite{waim13}.
+  Событие --- некоторая сущность, которая характеризуется временем возникновения и ключевыми словами. Оно вызывает резкий подъем частотных характеристик некоторых слов. Событием может быть футбольный матч и музыкальный концерт. В социальной сети Твиттер есть популярные темы, которые всегда содержат много сообщений. Например это сообщения с ключевыми словами iphone и ipad. Но такие сообщения нельзя считать событиями. Также событиями нельзя считать еженедельные пятничные сообщения о конце рабочей недели\cite{waim13}.
   
   Особенности социальной сети Твиттер состоят в следующем:
   \begin{itemize}
@@ -60,7 +63,11 @@
   \end{itemize}
   
   \section{Обзор существующих подходов}
-  Самым
+  \subsection{NED}
+	Первым подходом к извлечению событий принято считать NED (New Event Detection). NED предназначен для того, чтобы находить первое сообщение на тему, которая не встречалась раньше. Следующие сообщения на эту же тему уже не будут новыми и алгоритм их не пометит. В качестве основы для алгоритма используется 
+	\todo{Pic from NED article}
+	
+	
   
   
   \section{Полученные результаты}
@@ -69,13 +76,18 @@
 
 \begin{thebibliography}{9}
 	\bibitem{nuggets}
-	Extracting Information Nuggets from Disaster-Related Messages in Social Media,
-	Imran, Elbassuoni, Castillo, Diaz and Meier,
+	Imran, Elbassuoni, Castillo, Diaz and Meier;
+	Extracting Information Nuggets from Disaster-Related Messages in Social Media;
 	2013.
 	\bibitem{waim13}
-	Real Time Event Detection in Twitter,
-	Xun Wang, Feida Zhu, Jing Jiang, Sujian Li,
+	Xun Wang, Feida Zhu, Jing Jiang, Sujian Li;
+	Real Time Event Detection in Twitter;
 	2011.
+	\bibitem{ned}
+	Thorsten Brants, Francine Chen, Ayman Farahat; 
+	A System for New Event Detection; 
+	2003.
+	
 \end{thebibliography}
   
 \end{document}
