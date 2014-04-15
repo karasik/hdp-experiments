@@ -1,8 +1,9 @@
-\documentclass[12pt, a4paper, draft]{article}
+\documentclass[12pt, a4paper]{article}
 \usepackage{amsmath, amsfonts}
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
 \usepackage{graphicx}
+\usepackage{tikz}
 \usepackage{xcolor}
 \usepackage{wrapfig}
 \usepackage{float}
@@ -23,15 +24,13 @@
 \clubpenalty=10000
 \widowpenalty=10000
 \usepackage[T2A]{fontenc}
+\usepackage{hyperref}
 
 \newcommand\todo[1]{\marginpar{\textcolor{red}{#1}}}
-
 \DeclareMathOperator*{\argmax}{argmax}
 \DeclareMathOperator{\weight}{weight}
 \DeclareMathOperator{\score}{score}
 \DeclareMathOperator{\simu}{sim}
-
-\usepackage{hyperref}
 
 \begin{document}
   \section{Введение}
@@ -78,10 +77,18 @@
   
   \section{Обзор существующих подходов}
   \subsection{NED}
-	Исторически первым подходом к извлечению событий принято считать NED (New Event Detection)\cite{ned}. NED предназначен для того, чтобы находить первое сообщение на тему, которая не встречалась раньше. Следующие сообщения на эту же тему уже не будут новыми и алгоритм их не пометит. Для того, чтобы отвечать на вопрос, является ли документ новым, необходимо указать способ как определять степень сходства двух документов.
-	\todo{Pic from NED article}
+  
+	Исторически первым подходом к извлечению событий принято считать NED (New Event Detection)\cite{ned}. NED предназначен для того, чтобы находить первый документ на тему, которая не встречалась раньше. Следующие документы на эту тему уже не будут новыми и не будут помечены алгоритмом. Для того, чтобы отвечать на вопрос, является ли документ новым, необходимо указать способ как определять степень сходства двух документов.
 	
-	Для этого в алгоритме NED используется техника Incremental TF-IDF (Term Frequency - Inverse Document Frequency). TF-IDF --- базовый метод выяснять насколько отдельно взятые слова характеризуют весь документ, другими словами насколько вес слова $w$ большой в документе $d$. Пусть $f(d,w)$ --- количество слов $w$ в документе $d$. Определим значение $df_t(w)$ как количество документов, поступивших не позднее момента времени $t$, в которых встречается слово $w$. Используя введенные значения можно записать значение веса определенного слова $w$ в документе $d$. В момент времени $t$ имеем:
+\begin{figure}[H]
+  \centering
+  \label{ned-pic}
+  \includegraphics[width=0.58\textwidth]{ned.eps}
+  \\
+  \caption{Документы, соответствующие двум разным темам. Новые документы помечены серым цветом.}
+  \end{figure}  
+
+	Для этого в алгоритме NED используется техника Incremental TF--IDF (Term Frequency -- Inverse Document Frequency). TF--IDF --- базовый метод выяснять насколько отдельно взятые слова характеризуют весь документ, другими словами, насколько большой вес имеет слово $w$ в документе $d$. Пусть $f(d,w)$ --- количество слов $w$ в документе $d$. Определим значение $df_t(w)$ как количество документов, поступивших не позднее времени $t$, в которых встречается слово $w$. Используя введенные величины, можно записать значение веса определенного слова $w$ в документе $d$. В момент времени $t$ имеем:
 	\begin{equation}
 	\weight_t(d,w) = \frac{1}{Z_t(d)}f(d,w) \cdot \log \frac{N_t}{df_t(w)},
 	\end{equation}
@@ -105,7 +112,18 @@
 	\score_t(q) = 1 - \simu_t (d^*, q)
 	\end{equation}
 	может быть использовано для того, чтобы определить, является ли документ $q$ новым. Новыми будем считать все документы $q$, у которых значение $\score_t(q)$ больше, чем пороговое значение $\theta_s$. В обратном случае считается что существует документ $d^*$, достаточно похожий на $q$ и поэтому $q$ не представляет собой сообщение на новую тему. Для того, чтобы определить подходящее значение $\theta_s$, можно использовать размеченный корпус и посчитать значение $\simu_t (d,q)$ среди документов, соответствующих одному и разным событиям.
+	
+	\subsection{Выявление событий с помощью LDA}
+  На следующем подходе рассмотрим как тематические модели (Topic Models) могут быть использованы для задачи распознавания событий. Для этого опишем схему, по которой работает алгоритм, предложенный в \cite{mediaeval}. В качестве задачи было необходимо по данным к фотографиям Flickr\footnote{http://flickr.com} распознать все события на определенную тему, проходившие в конкретных городах. Задача сразу разбивается на пять частей: 
+  \begin{enumerate}
+  \item предобработка данных,
+  \item извлечение города,
+  \item распознавание темы,
+  \item распознавание события,
+  \item оптимизация описания события.
+  \end{enumerate}
   
+
   
   \section{Полученные результаты}
   В качестве данных были использованы сообщения пользователей Twitter с 4 июня 2013 года по 31 июня 2013 года, содержащие в себе хэштег \#texas. Всего корпус включает порядка 240 тысяч сообщений и 1.5 миллиона слов. 
@@ -113,17 +131,21 @@
 
 \begin{thebibliography}{9}
 	\bibitem{nuggets}
-	Imran, Elbassuoni, Castillo, Diaz and Meier;
-	Extracting Information Nuggets from Disaster-Related Messages in Social Media;
+	Imran, Elbassuoni, Castillo, Diaz and Meier.
+	Extracting Information Nuggets from Disaster-Related Messages in Social Media.
 	2013.
 	\bibitem{waim13}
-	Xun Wang, Feida Zhu, Jing Jiang, Sujian Li;
-	Real Time Event Detection in Twitter;
+	Xun Wang, Feida Zhu, Jing Jiang, Sujian Li.
+	Real Time Event Detection in Twitter.
 	2011.
 	\bibitem{ned}
-	Thorsten Brants, Francine Chen, Ayman Farahat; 
-	A System for New Event Detection; 
+	Thorsten Brants, Francine Chen, Ayman Farahat.
+	A System for New Event Detection.
 	2003.
+	\bibitem{mediaeval}
+	Konstantinos N. Vavliakis, Fani A. Tzima, and Pericles A. Mitkas.	
+	Event Detection via LDA for the MediaEval2012 SED Task.
+	2012.
 	
 \end{thebibliography}
   
