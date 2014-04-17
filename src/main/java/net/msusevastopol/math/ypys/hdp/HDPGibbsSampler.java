@@ -33,7 +33,7 @@ import net.msusevastopol.math.ypys.utils.ProbUtils;
 public class HDPGibbsSampler implements Serializable
 {
 	private static final int BIG_DOCUMENT_WORDS = 500;
-	public static final int ADDITIONAL_TOPIC = 1;
+	public static final int ADDITIONAL_TOPIC = 0;
 
 	private static boolean isDocumentAdditional(DOCState s)
 	{
@@ -171,7 +171,6 @@ public class HDPGibbsSampler implements Serializable
 		int table = sampleTable(d, i);
 		if (table == docStates[d].numberOfTables) // new Table
 			addWord(d, i, table, sampleTopic()); // sampling its
-													// Topic
 		else
 			addWord(d, i, table, docStates[d].tableToTopic[table]); // existing
 	}
@@ -185,7 +184,7 @@ public class HDPGibbsSampler implements Serializable
 		// All words sit at first table.
 		removeWord(d, i); // remove the word i from the state
 		if (table == docStates[d].numberOfTables) // new Table
-			addWord(d, i, table, topic); // sampling its
+			addWord(d, i, table, topic);
 		else
 			addWord(d, i, table, docStates[d].tableToTopic[table]); // existing
 	}

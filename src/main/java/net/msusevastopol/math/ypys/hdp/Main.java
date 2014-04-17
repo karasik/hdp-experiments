@@ -27,7 +27,7 @@ public class Main
 		{
 			System.out.println("Found peak #" + index + ": " + date);
 			FrequencyOverWords keywords = FrequencyOverWords.getFromCorpus(
-					corpus, null, date, 0);
+					corpus, null, date, 1);
 
 			// Map<String, Double> tmp = CollectionUtils.newMap();
 			// tmp.put("senat", 1.0);
