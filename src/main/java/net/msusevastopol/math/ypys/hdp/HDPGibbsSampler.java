@@ -32,17 +32,16 @@ import net.msusevastopol.math.ypys.utils.ProbUtils;
  */
 public class HDPGibbsSampler implements Serializable
 {
-	private static final int BIG_DOCUMENT_WORDS = 500;
-	public static final int ADDITIONAL_TOPIC = 0;
+	private static final int ADDITIONAL_DOCUMENT_WORDS = 150;
 
 	private static boolean isDocumentAdditional(DOCState s)
 	{
-		return s.words.length > BIG_DOCUMENT_WORDS;
+		return s.words.length > ADDITIONAL_DOCUMENT_WORDS;
 	}
 
 	private static final long serialVersionUID = 1L;
 	private double beta = 0.5; // default only
-	private double gamma = 1.5;
+	private double gamma = 12.5;
 	private double alpha = 1.0;
 
 	private Random random = new Random();
@@ -155,12 +154,18 @@ public class HDPGibbsSampler implements Serializable
 		{
 			for (int i = 0; i < docStates[d].documentLength; i++)
 			{
+				if (docStates[d].words[i].termIndex == 190)
+				{
+//					System.out.println("Mimi");
+				}
+				
 				if (isDocumentAdditional(docStates[d]))
 					sweepForAdditionalDocument(d, i);
 				else
 					sweepForNormalDocument(d, i);
 				// Table
 			}
+//			System.out.println("Document " + d + " proceed");
 		}
 		defragment();
 	}
@@ -170,7 +175,10 @@ public class HDPGibbsSampler implements Serializable
 		removeWord(d, i); // remove the word i from the state
 		int table = sampleTable(d, i);
 		if (table == docStates[d].numberOfTables) // new Table
-			addWord(d, i, table, sampleTopic()); // sampling its
+		{
+			int topic = sampleTopic();
+			addWord(d, i, table, topic); // sampling its
+		}
 		else
 			addWord(d, i, table, docStates[d].tableToTopic[table]); // existing
 	}
@@ -179,7 +187,7 @@ public class HDPGibbsSampler implements Serializable
 	private void sweepForAdditionalDocument(int d, int i)
 	{
 		final int table = 0; // fixed for additional document
-		final int topic = ADDITIONAL_TOPIC; // fixed for additional document
+		final int topic = 0; // fixed for additional document
 
 		// All words sit at first table.
 		removeWord(d, i); // remove the word i from the state
@@ -319,32 +327,32 @@ public class HDPGibbsSampler implements Serializable
 	 * @param topic
 	 *            the topic to which the word is assigned to
 	 */
-	private void addWord(int docID, int i, int table, int topic)
+	private void addWord(int docID, int i, int table, int k)
 	{
 		DOCState docState = docStates[docID];
 		docState.words[i].tableAssignment = table;
 		docState.wordCountByTable[table]++;
-		wordCountByTopic[topic]++;
-		wordCountByTopicAndTerm[topic][docState.words[i].termIndex]++;
+		wordCountByTopic[k]++;
+		wordCountByTopicAndTerm[k][docState.words[i].termIndex]++;
 		if (docState.wordCountByTable[table] == 1)
 		{ // a new table is created
 			docState.numberOfTables++;
-			docState.tableToTopic[table] = topic;
+			docState.tableToTopic[table] = k;
 			totalNumberOfTables++;
-			numberOfTablesByTopic[topic]++;
+			numberOfTablesByTopic[k]++;
 			docState.tableToTopic = ensureCapacity(docState.tableToTopic,
 					docState.numberOfTables);
 			docState.wordCountByTable = ensureCapacity(
 					docState.wordCountByTable, docState.numberOfTables);
-			if (topic >= getNumberOfTopics())
+			if (k == numberOfTopics)
 			{ // a new topic is created
-				numberOfTopics = topic + 1;
+				numberOfTopics++;
 				numberOfTablesByTopic = ensureCapacity(numberOfTablesByTopic,
-						getNumberOfTopics());
+						numberOfTopics);
 				wordCountByTopic = ensureCapacity(wordCountByTopic,
-						getNumberOfTopics());
+						numberOfTopics);
 				wordCountByTopicAndTerm = add(wordCountByTopicAndTerm,
-						new int[sizeOfVocabulary], getNumberOfTopics());
+						new int[sizeOfVocabulary], numberOfTopics);
 			}
 		}
 	}
@@ -487,6 +495,10 @@ public class HDPGibbsSampler implements Serializable
 
 		public int resolveTopic()
 		{
+//			if (190 == words[0].termIndex)
+//			{
+//				System.out.println("Mi");
+//			}
 			int[] topicProp = new int[getNumberOfTopics()];
 			for (WordState w : words)
 			{

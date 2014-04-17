@@ -8,7 +8,7 @@ public class Main
 	private static final int WORDS_IN_ADD_DOC = 50000;
 	private static final int TOP_COUNT = 10;
 	private static final int FILENAME_TOP_COUNT = 5;
-	private static final int HDP_ITERATIONS = 100;
+	private static final int HDP_ITERATIONS = 200;
 
 	public static void main(String[] args) throws IOException
 	{
@@ -21,7 +21,7 @@ public class Main
 		freq.save(Filename.getPlotOutput("all"));
 
 		IDate[] result = new MaxPeakDetector(7, 6).detectPeaks(freq);
-		result = new IDate[] { new Date(26, 5) };
+		result = new IDate[] { new Date(26, 6) };
 		int index = 1;
 		for (IDate date : result)
 		{
@@ -42,7 +42,7 @@ public class Main
 			IDocument additionalDocument = Document.getFromProp(top,
 					WORDS_IN_ADD_DOC);
 
-			 corpus.addAdditionalDocument(additionalDocument);
+//			 corpus.addAdditionalDocument(additionalDocument);
 			HDPGibbsSampler hdp = new HDPGibbsSampler(corpus);
 			hdp.run(HDP_ITERATIONS);
 
