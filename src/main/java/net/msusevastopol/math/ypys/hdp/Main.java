@@ -5,9 +5,11 @@ import java.util.Arrays;
 
 public class Main
 {
-	private static final int WORDS_IN_ADD_DOC = 50000;
-	private static final int TOP_COUNT = 10;
-	private static final int FILENAME_TOP_COUNT = 5;
+	private static final int WORDS_IN_ADD_DOC = 50;
+	private static final int ADD_DOCS = 10000;
+	private static final int TOP_COUNT = 50;
+	private static final int TARGET_TOPIC = 1;
+	private static final int FILENAME_TOP_COUNT = 50;
 	private static final int HDP_ITERATIONS = 200;
 
 	public static void main(String[] args) throws IOException
@@ -21,18 +23,12 @@ public class Main
 		freq.save(Filename.getPlotOutput("all"));
 
 		IDate[] result = new MaxPeakDetector(7, 6).detectPeaks(freq);
-		result = new IDate[] { new Date(26, 6) };
 		int index = 1;
 		for (IDate date : result)
 		{
 			System.out.println("Found peak #" + index + ": " + date);
 			FrequencyOverWords keywords = FrequencyOverWords.getFromCorpus(
 					corpus, null, date, 1);
-
-			// Map<String, Double> tmp = CollectionUtils.newMap();
-			// tmp.put("senat", 1.0);
-			// tmp.put("vote", 1.0);
-			// FrequencyOverWords keywords = new FrequencyOverWords(tmp);
 
 			String[] topWords = keywords.getTopWords(FILENAME_TOP_COUNT);
 			System.out.println("Keywords for the peak: "
@@ -42,7 +38,8 @@ public class Main
 			IDocument additionalDocument = Document.getFromProp(top,
 					WORDS_IN_ADD_DOC);
 
-//			 corpus.addAdditionalDocument(additionalDocument);
+			for (int i = 0; i < ADD_DOCS; i++)
+				corpus.addAdditionalDocument(additionalDocument);
 			HDPGibbsSampler hdp = new HDPGibbsSampler(corpus);
 			hdp.run(HDP_ITERATIONS);
 
@@ -50,16 +47,14 @@ public class Main
 
 			corpus.save(Filename.getDocumentsToTopicAssignment(suffix));
 
-			for (int topic = 0; topic < hdp.getNumberOfTopics(); topic++)
-			{
-				FrequencyOverWords corpusWords = FrequencyOverWords
-						.getFromCorpus(corpus, topic, null, 0);
-				System.out.println("Topic " + topic + " keywords are: "
-						+ Arrays.asList(corpusWords.getTopWords(10)));
-				FrequencyOverTime freqOverTime = new FrequencyOverTime(corpus,
-						topic);
-				freqOverTime.save(Filename.getPlotOutput(suffix + "-" + topic));
-			}
+			FrequencyOverWords corpusWords = FrequencyOverWords.getFromCorpus(
+					corpus, TARGET_TOPIC, null, 0);
+			System.out.println("Topic  keywords are: "
+					+ Arrays.asList(corpusWords.getTopWords(10)));
+			FrequencyOverTime freqOverTime = new FrequencyOverTime(corpus,
+					TARGET_TOPIC);
+			freqOverTime.save(Filename.getPlotOutput(suffix + "-"
+					+ TARGET_TOPIC));
 
 			corpus.clearAdditionalDocuments();
 			index++;

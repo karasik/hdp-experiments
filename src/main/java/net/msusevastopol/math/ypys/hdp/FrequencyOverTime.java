@@ -16,7 +16,7 @@ public class FrequencyOverTime
 	{
 		this(corpus, null);
 	}
-	
+
 	public FrequencyOverTime(ICorpus corpus, Integer topic)
 	{
 		IDate last = corpus.getDocuments()
@@ -25,7 +25,8 @@ public class FrequencyOverTime
 
 		for (IDocument document : corpus.getDocuments())
 		{
-			if (null == topic || topic.equals(document.getTopic()))
+			if (!document.isAdditional()
+					&& (null == topic || topic.equals(document.getTopic())))
 				frequency[DateUtils.toCode(document.getDate())]++;
 		}
 

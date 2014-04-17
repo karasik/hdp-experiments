@@ -11,4 +11,6 @@ public interface IDocument
 	public IDate getDate();
 	
 	public boolean isAdditional();
+	
+	public String getAuthor();
 }

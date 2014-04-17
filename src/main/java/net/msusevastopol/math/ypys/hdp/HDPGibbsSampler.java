@@ -32,16 +32,14 @@ import net.msusevastopol.math.ypys.utils.ProbUtils;
  */
 public class HDPGibbsSampler implements Serializable
 {
-	private static final int ADDITIONAL_DOCUMENT_WORDS = 150;
-
-	private static boolean isDocumentAdditional(DOCState s)
+	private boolean isDocumentAdditional(int d)
 	{
-		return s.words.length > ADDITIONAL_DOCUMENT_WORDS;
+		return corpus.getDocuments().get(d).isAdditional();
 	}
 
 	private static final long serialVersionUID = 1L;
 	private double beta = 0.5; // default only
-	private double gamma = 12.5;
+	private double gamma = 2.0;
 	private double alpha = 1.0;
 
 	private Random random = new Random();
@@ -154,18 +152,12 @@ public class HDPGibbsSampler implements Serializable
 		{
 			for (int i = 0; i < docStates[d].documentLength; i++)
 			{
-				if (docStates[d].words[i].termIndex == 190)
-				{
-//					System.out.println("Mimi");
-				}
-				
-				if (isDocumentAdditional(docStates[d]))
+				if (isDocumentAdditional(d))
 					sweepForAdditionalDocument(d, i);
 				else
 					sweepForNormalDocument(d, i);
 				// Table
 			}
-//			System.out.println("Document " + d + " proceed");
 		}
 		defragment();
 	}
@@ -186,13 +178,14 @@ public class HDPGibbsSampler implements Serializable
 	// What we should do for additional document (fictional)
 	private void sweepForAdditionalDocument(int d, int i)
 	{
-		final int table = 0; // fixed for additional document
-		final int topic = 0; // fixed for additional document
-
-		// All words sit at first table.
 		removeWord(d, i); // remove the word i from the state
+
+		int table = 1;
 		if (table == docStates[d].numberOfTables) // new Table
-			addWord(d, i, table, topic);
+		{
+			int topic = 1;
+			addWord(d, i, table, topic); // sampling its
+		}
 		else
 			addWord(d, i, table, docStates[d].tableToTopic[table]); // existing
 	}
@@ -495,10 +488,10 @@ public class HDPGibbsSampler implements Serializable
 
 		public int resolveTopic()
 		{
-//			if (190 == words[0].termIndex)
-//			{
-//				System.out.println("Mi");
-//			}
+			// if (190 == words[0].termIndex)
+			// {
+			// System.out.println("Mi");
+			// }
 			int[] topicProp = new int[getNumberOfTopics()];
 			for (WordState w : words)
 			{

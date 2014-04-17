@@ -47,12 +47,12 @@ public class Corpus implements ICorpus
 			if (document.getTopic() == null)
 				out.format("%s | %d %d | %s\n", MiscUtils.implode(" ",
 						document.getWords()), document.getDate().getDay(),
-						document.getDate().getHour(), "Dowan");
+						document.getDate().getHour(), document.getAuthor());
 			else
 				out.format("%d) %s | %d %d | %s\n", document.getTopic(),
 						MiscUtils.implode(" ", document.getWords()), document
 								.getDate().getDay(), document.getDate()
-								.getHour(), "Duvessa");
+								.getHour(), document.getAuthor());
 		}
 
 		out.flush();
@@ -72,8 +72,9 @@ public class Corpus implements ICorpus
 			String[] words = ParsingUtils.extractWords(line);
 			Integer topic = ParsingUtils.extractTheme(line);
 			IDate date = ParsingUtils.extractDate(line);
+			String author = ParsingUtils.extractAuthor(line);
 
-			documents.add(new Document(words, topic, date));
+			documents.add(new Document(words, topic, date, author));
 		}
 
 		in.close();
@@ -95,6 +96,11 @@ public class Corpus implements ICorpus
 		public static IDate extractDate(String line)
 		{
 			return new Date(line.split(" \\| ")[1]);
+		}
+
+		public static String extractAuthor(String line)
+		{
+			return line.split(" \\| ")[2];
 		}
 
 		public static String[] extractWords(String line)
