@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>de.uni-leipzig.informatik.asv</groupId>
+	<groupId>new.msusevastopol.math.ypys</groupId>
 	<artifactId>hdp</artifactId>
 	<properties>
 		<maven.compiler.source>1.6</maven.compiler.source>
@@ -10,7 +10,7 @@
 		<encoding>UTF-8</encoding>
 	</properties>
 
-	<name>Hierarchical Dirichlet Processes</name>
+	<name>Event detection task in Twitter</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<description>Hierarchical Dirichlet Processes with Gibbs Sampling</description>
 	<dependencies>
