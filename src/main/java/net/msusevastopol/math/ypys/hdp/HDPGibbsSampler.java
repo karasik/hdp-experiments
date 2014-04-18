@@ -11,6 +11,7 @@ import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -55,6 +56,8 @@ public class HDPGibbsSampler implements Serializable
 	private int numberOfTopics;
 	private int totalNumberOfTables;
 
+	private Map<Integer, String> codesToWords;
+
 	private ICorpus corpus;
 
 	public HDPGibbsSampler(ICorpus corpus)
@@ -72,6 +75,7 @@ public class HDPGibbsSampler implements Serializable
 	{
 		this.corpus = corpus;
 		Map<String, Integer> codesAssignment = CollectionUtils.newMap();
+		codesToWords = CollectionUtils.newMap();
 
 		int[][] documents = new int[corpus.getDocuments().size()][];
 		int code = 0;
@@ -88,6 +92,7 @@ public class HDPGibbsSampler implements Serializable
 				else
 				{
 					codesAssignment.put(word, code);
+					codesToWords.put(code, word);
 					documents[d][w] = code++;
 				}
 			}
@@ -513,5 +518,38 @@ public class HDPGibbsSampler implements Serializable
 			this.termIndex = wordIndex;
 			this.tableAssignment = tableAssignment;
 		}
+	}
+
+	public List<String> getTopTopicWords(int topic, int top)
+	{
+		List<String> result = CollectionUtils.newList();
+		List<Pair<String, Integer>> words = CollectionUtils.newList();
+
+		for (int i = 0; i < sizeOfVocabulary; i++)
+			words.add(new Pair<String, Integer>(codesToWords.get(i),
+					wordCountByTopicAndTerm[topic][i]));
+
+		Collections.sort(words, new Comparator<Pair<String, Integer>>()
+		{
+			public int compare(Pair<String, Integer> a, Pair<String, Integer> b)
+			{
+				return b.second.compareTo(a.second);
+			}
+		});
+
+		for (int i = 0; i < Math.min(top, words.size()); i++)
+		{
+			result.add(words.get(i).first);
+		}
+
+		return result;
+	}
+
+	public void removeAdditional()
+	{
+		for (int d = 0; d < docStates.length; d++)
+			if (isDocumentAdditional(d))
+				for (int i = 0; i < docStates[d].words.length; i++)
+					removeWord(d, i);
 	}
 }
