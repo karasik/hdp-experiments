@@ -24,9 +24,14 @@ public class Main
 		FrequencyOverTime freq = new FrequencyOverTime(corpus);
 		freq.save(Filename.getPlotOutput("all"));
 
-		IDate[] result = new MaxPeakDetector(15, 9).detectPeaks(freq);
+		int n = 6;
+		
+		IDate[] result = new MaxPeakDetector(n, 9).detectPeaks(freq);
 		int index = 1;
-		result = new IDate[]{new Date(5, 8)};
+		
+//		result = new IDate[]{new Date(26, 5)};
+		
+		FrequencyOverTime[] results = new FrequencyOverTime[n];
 		
 		for (IDate date : result)
 		{
@@ -67,7 +72,18 @@ public class Main
 
 			corpus.clearAdditionalDocuments();
 
+			results[index - 1] = freqOverTime;
+			
 			index++;
+		}
+		
+		for (int i=0; i<results.length; i++)
+		{
+			for (int j=0; j<results.length; j++)
+			{
+				System.out.print(results[i].normalizedDotProduct(results[j]) + " ");
+			}
+			System.out.println();
 		}
 	}
 

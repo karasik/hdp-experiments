@@ -75,4 +75,26 @@ public class FrequencyOverTime
 		return mapping;
 	}
 
+	public double normalizedDotProduct(FrequencyOverTime b)
+	{
+		return this.dotProduct(b) / this.norm() / b.norm();
+	}
+
+	private double norm()
+	{
+		return Math.sqrt(this.dotProduct(this));
+	}
+
+	private long dotProduct(FrequencyOverTime b)
+	{
+		if (this.frequency.length != b.frequency.length)
+			throw new IllegalArgumentException();
+
+		long ret = 0;
+		for (int i = 0; i < frequency.length; i++)
+		{
+			ret += frequency[i] * b.frequency[i];
+		}
+		return ret;
+	}
 }
