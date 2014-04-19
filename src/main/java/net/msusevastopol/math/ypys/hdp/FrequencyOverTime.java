@@ -46,6 +46,30 @@ public class FrequencyOverTime
 		out.close();
 	}
 
+	public double getMean()
+	{
+		double result = 0, sum = 0;
+		for (int i = 0; i < frequency.length; i++)
+		{
+			result += frequency[i] * i;
+			sum += frequency[i];
+		}
+		return result / sum;
+	}
+
+	public double getSD2()
+	{
+		double mean = getMean();
+		double result = 0;
+		double sum = 0;
+		for (int i = 0; i < frequency.length; i++)
+		{
+			result += frequency[i] * (i - mean) * (i - mean);
+			sum += frequency[i];
+		}
+		return result / sum;
+	}
+
 	public Map<IDate, Integer> getMapping()
 	{
 		return mapping;

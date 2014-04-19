@@ -420,11 +420,11 @@
   \section{Реализация и тестирование решения}
   Для реализации программы, описанной алгоритмом \ref{main-algo}, был выбран язык Java. Выбор мотивирован тем, что в качестве свободной реализации для модели HDP использовалась реализация на языке Java, написанная Arnim Bleier et al \cite{hdp-2}. Java объектно-ориентированный язык высокого уровня, что оказалось очень удобным для реализации  алгоритма \ref{main-algo}.
   
-  \subsection{Входные данные}
+  \subsection{Описание данных}
   В качестве данных для задачи были использованы сообщения пользователей сети Твиттер с 4 июня по 1 июля 2013 года, содержащие хэштег \#texas. Всего в корпусе находится около 240 тысяч сообщений. Цель алгоритма --- найти события, показать их на графике частоты сообщений и указать ключевые слова к событиям.
   
   На рисунке \ref{fig:all-freq} изображена плотность сообщений во входных данных. На графике есть несколько пиков, которые обозначают события. 
-  \begin{figure}
+  \begin{figure}[H]
   \centering
   \label{fig:all-freq}
   \includegraphics[width=7.5cm]{all-freq.eps}
@@ -432,7 +432,33 @@
   \caption{Зависимость количества сообщений в час от времени. На втором графике видна зависимость от времени суток.}
   \end{figure}
   
+  \subsection{Извлечение событий}
   
+	На рисунке \ref{fig:all-freq-labeled} можно видеть экстремумы, отмеченные алгоритмом. Путем выбора метода и параметров, можно помечать больше или меньше максимумов. 
+
+	 \begin{figure}[H]
+	  \centering
+	  \label{fig:all-freq-labeled}
+	  \includegraphics[width=13cm]{all-freq-labeled.eps}
+	  \caption{График частоты сообщений с отмеченными экстремумами.}
+	  \end{figure}	
+	
+	Приведем таблицу, в которой будут указаны ключевые слова для события и соответствующее реальное событие.
+	
+	\begin{table}[H]
+	\centering		
+	\begin{tabular}{ l | l | l |}
+	\hline
+	 & Ключевые слова & Вызвавшее событие \\ \hline
+	\#1 & \begin{tabular}{l} year, read, prison, dragon, \\ amazon, written, bestseller \end{tabular} & \begin{tabular}{l} Написанная в техасской тюрьме книга \\ The Sword and the Dragon является \\ бестселлером на Amazon более трех \\ лет. \end{tabular} \\ \hline
+	\#2 & \begin{tabular}{l} sb5, standwithwendi, abort, \\ senat \end{tabular} & \begin{tabular}{l} Голосование в сенате штата за закон \\ по запрету абортов.\\  \end{tabular} \\ \hline
+	\#3 & \begin{tabular}{l} houston, california, england, \\ artist, rt, watch, defjam \end{tabular} & \begin{tabular}{l} Техасский хип хоп исполнитель Devin \\ the Dude объявил, что его восьмой \\ студийный альбом будет называться \\ One for the Road и будет выпущен в \\ продажу в сентябре 2013 года.\end{tabular} \\ \hline
+	\#5 & \begin{tabular}{l} florida, z1, america,  usa, \\ bahrain, spur \end{tabular} & Вызвавшее событие \\ \hline
+	\end{tabular}
+	
+	\caption{Таблица с описаниями событий}
+	\label{event-table}
+	\end{table}
   
 \begin{thebibliography}{9}
 	\bibitem{nuggets}

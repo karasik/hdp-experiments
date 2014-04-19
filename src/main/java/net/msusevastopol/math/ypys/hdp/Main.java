@@ -26,6 +26,8 @@ public class Main
 
 		IDate[] result = new MaxPeakDetector(15, 9).detectPeaks(freq);
 		int index = 1;
+		result = new IDate[]{new Date(5, 8)};
+		
 		for (IDate date : result)
 		{
 			System.out.println("Found peak #" + index + ": " + date);
@@ -42,24 +44,27 @@ public class Main
 
 			for (int i = 0; i < ADD_DOCS; i++)
 				corpus.addAdditionalDocument(additionalDocument);
-			HDPGibbsSampler hdp = new HDPGibbsSampler(corpus);
-
-			hdp.run(HDP_ITERATIONS);
+			 HDPGibbsSampler hdp = new HDPGibbsSampler(corpus);
+			 hdp.run(HDP_ITERATIONS);
 			String suffix = date.toShortString();
 			corpus.save(Filename.getDocumentsToTopicAssignment(suffix));
+
+			 hdp.removeAdditional();
+
+			 List<String> topTopicWords = hdp.getTopTopicWords(1,
+			 KEYWORDS_TO_PRINT);
 			
-			hdp.removeAdditional();
-
-			List<String> topTopicWords = hdp.getTopTopicWords(1,
-					KEYWORDS_TO_PRINT);
-
-			System.out.println("Topic  keywords are: " + topTopicWords);
+			 System.out.println("Topic  keywords are: " + topTopicWords);
 
 			FrequencyOverTime freqOverTime = new FrequencyOverTime(corpus,
 					TARGET_TOPIC);
 
 			freqOverTime.save(Filename.getPlotOutput(suffix + "-"
 					+ TARGET_TOPIC));
+
+			System.out.println("Mean: " + freqOverTime.getMean());
+			System.out.println("SD^2: " + freqOverTime.getSD2());
+
 			corpus.clearAdditionalDocuments();
 
 			index++;
