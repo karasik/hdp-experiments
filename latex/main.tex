@@ -423,7 +423,7 @@
   \end{enumerate}
   Первый случай можно выявить, найдя нормализованное скалярное произведение двух функций частоты в косинусной метрике. Если значение будет близко к единице, события можно считать тождественными. Чтобы различать второй случай, предлагается посчитать императивное стандартное отклонение. Если оно будет достаточно велико, событие нельзя считать подходящим.
   
-  Полученный метод не будет работать в случае когда событие состоит из двух достаточно удаленных пиков. В этом случае можно использовать смешанную модель, как это было описанно выше в методах нахождения экстремума. При тестировании подобных событий не было найдено.
+  Полученный метод не будет работать в случае когда событие состоит из двух достаточно удаленных пиков. В этом случае можно использовать смешанную модель, как это было описанно выше в методах нахождения экстремума. При тестировании подобных событий не было найдено \cite{blei-sd}.
   
 
   \section{Реализация и тестирование решения}
@@ -448,7 +448,7 @@
 	 \begin{figure}[H]
 	  \centering
 	  \label{fig:all-freq-labeled}
-	  \includegraphics[width=13cm]{all-freq-labeled.eps}
+	  \includegraphics[width=15cm]{all-freq-labeled-1.eps}
 	  \caption{График частоты сообщений с отмеченными экстремумами.}
 	  \end{figure}
 	  
@@ -466,14 +466,14 @@
 	\#6 & 4261 \\ 
 	\end{tabular}
 	\caption{Жирным шрифтом помечены события с $\sigma^2>\sigma_0^2$.}
+	\label{sd-table}
 	\end{table}
 	
-\todo{triangle table}	
+%\todo{triangle table}	
 	
 	\begin{table}[H]
 	\centering
-	\begin{tabular}{ r  c  c  c  c  c  c }
-	\hline
+	\begin{tabular}{ r | c  c  c  c  c  c }
 	\#1 & 1 &  &  &  &  &  \\ 
 	\#2 & 0.004 & 1 &  &  &  &  \\ 
 	\#3 & 0.001 & 0.009 & 1 &  &  &  \\ 
@@ -483,7 +483,30 @@
 	& \#1 & \#2 & \#3 & \#4 & \#5 & \#6 \\
 	\end{tabular}
 	\caption{Значения нормализованного скалярного произведения функций частот в косинусной метрике. Жирным шрифтом помечены значения, позволяющие считать события тождественными.}
+	\label{dotprod-table}
 	\end{table}
+	
+	\begin{figure}[H]
+	\centering
+
+	\includegraphics[width=7.5cm]{all-freq-5-8.eps}	
+	\includegraphics[width=7.5cm]{all-freq-26-5.eps}	
+	
+	\includegraphics[width=7.5cm]{all-freq-24-6.eps}	
+	\includegraphics[width=7.5cm]{all-freq-27-0.eps}	
+	
+	\includegraphics[width=7.5cm]{all-freq-17-2.eps}	
+	\includegraphics[width=7.5cm]{all-freq-23-20.eps}	
+	
+	\caption{Частоты сообщений для "событий" \#1 --- \#6.}
+	\end{figure}
+	
+	Из таблиц \ref{sd-table} и \ref{dotprod-table} можно видеть, что алгоритм выдаст в конечном счете только события \#1, \#2, \#3. События \#4 и \#5 будут отброшены как имеющие большое среднеквадратичное отклонение. Событие \#6 не войдет в финальный результат потому, что значение похожести функций частоты для событий \#3, \#6 больше допустимой нормы:
+\begin{equation}
+	\simu^{\cos}(f_{\#3}, f_{\#6}) = \frac{(f_{\#3}, f_{\#6})}{ \Vert f_{\#3} \Vert \cdot \Vert f_{\#6} \Vert} > \theta_{\simu}.
+\end{equation}
+
+Приведем ниже таблицу \ref{event-table} с описаниями событий \#1, \#2, \#3:
 	
 	\begin{table}[H]
 	\centering		
@@ -493,12 +516,14 @@
 	\#1 & \begin{tabular}{l} year, read, prison, dragon, \\ amazon, written, bestseller \end{tabular} & \begin{tabular}{l} Написанная в техасской тюрьме книга \\ The Sword and the Dragon является \\ бестселлером на Amazon более трех \\ лет. \end{tabular} \\ \hline
 	\#2 & \begin{tabular}{l} sb5, standwithwendi, abort, \\ senat \end{tabular} & \begin{tabular}{l} Голосование в сенате штата за закон \\ по запрету абортов.\\  \end{tabular} \\ \hline
 	\#3 & \begin{tabular}{l} houston, california, england, \\ artist, rt, watch, defjam \end{tabular} & \begin{tabular}{l} Техасский хип хоп исполнитель Devin \\ the Dude объявил, что его восьмой \\ студийный альбом будет называться \\ One for the Road и будет выпущен в \\ продажу в сентябре 2013 года.\end{tabular} \\ \hline
-	\#5 & \begin{tabular}{l} florida, z1, america,  usa, \\ bahrain, spur \end{tabular} & Вызвавшее событие \\ \hline
 	\end{tabular}
 	
 	\caption{Таблица с описаниями событий}
 	\label{event-table}
 	\end{table}
+	
+	\section{Заключение}
+	
   
 \begin{thebibliography}{9}
 	\bibitem{nuggets}
@@ -538,7 +563,10 @@
 	\bibitem{ss-learning}
 	Ramnath Balasubramanyan, William W. Cohen, Matthew Hurst.
 	Modeling corpora of timestamped documents using semisupervised nonparametric topic models.
-		
+	\bibitem{blei-sd}
+	 David Blei.
+	 COS 424: Interacting with Data.
+	 2008.
 \end{thebibliography}
   
 \end{document}
