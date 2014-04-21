@@ -84,16 +84,6 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Результаты}
-  Данные: 240 тысяч сообщений с 4 июня по 1 июля 2013 года, содержащие хэштег \#texas.
-  \begin{figure}[H]
-  \centering
-  \includegraphics[width=5.0cm]{all-freq.eps}
-  \includegraphics[width=5.0cm]{all-freq-scaled.eps}
-  \end{figure}
-\end{frame}
-
-\begin{frame}
 \frametitle{Результаты}
  Шаг 1: выделение экстремумов.
  \begin{figure}[H]
@@ -105,6 +95,7 @@
 
 \begin{frame}
 \frametitle{Результаты}
+Шаг 2: выделение ключевых слов.
 \begin{table}
 \begin{tabular}{r | l}
 \#1 & year, read, prison, dragon, amazon, \\
@@ -118,7 +109,48 @@
 \end{frame}
 
 \begin{frame}
+\frametitle{Результаты}
+Шаг 3,\ 4: применение модели HDP, фильтрация.
+\begin{figure}[H]
+\centering
+\includegraphics[width=5.0cm]{all-freq-5-8.eps}	
+\includegraphics[width=5.0cm]{all-freq-26-5.eps}	
+
+\includegraphics[width=5.0cm]{all-freq-24-6.eps}	
+\includegraphics[width=5.0cm]{all-freq-27-0-1.eps}	
+
+\includegraphics[width=5.0cm]{all-freq-17-2-1.eps}	
+\includegraphics[width=5.0cm]{all-freq-23-20.eps}	
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Результаты}
+{\small
+\begin{table}[H]
+\centering		
+\begin{tabular}{| l | l |}
+	\hline
+	 Ключевые слова & Вызвавшее событие \\ \hline
+	 \begin{tabular}{l} year, read, prison, dragon, \\ amazon, written, bestseller \end{tabular} & \begin{tabular}{l} Написанная в техасской тюрьме книга \\ The Sword and the Dragon является \\ бестселлером на Amazon уже более трех \\ лет. \end{tabular} \\ \hline
+	 \begin{tabular}{l} sb5, standwithwendi, abort, \\ senat \end{tabular} & \begin{tabular}{l} Обсуждение сенатом закона по запрету \\ абортов, который носит название Senate \\ Bill 5. Wendi Davis ---  политик, которая \\ боролась с принятием этого закона.  \end{tabular} \\ \hline
+	 \begin{tabular}{l} houston, california, england, \\ artist, rt, watch, defjam \end{tabular} & \begin{tabular}{l} Хип хоп исполнитель из Хьюстон Devin \\ the Dude объявил, что его восьмой \\ студийный альбом будет называться \\ One for the Road и будет выпущен в \\ продажу в сентябре 2013 года. Альбом \\ будет выпущен лейблом Def Jam \\ Recordings.\end{tabular} \\ \hline
+	 \begin{tabular}{l} execut, 500th, mccarthi, \\ kimberli, 1976\end{tabular} & \begin{tabular}{l} В штате Техас приведен в исполнение \\ 500-й по счету смертный приговор. \\ Смертная казнь имеет место с 1976 года.\end{tabular} \\ \hline
+	\end{tabular}
+\end{table}
+}
+\end{frame}
+
+\begin{frame}
   \frametitle{Заключение}
+  В ходе выполения дипломной работы было достигнуто:
+	\begin{itemize}
+	\item изучены существующие методы извлечения описаний событий из коротких пользовательских сообщений,
+	\item изучена возможность применения тематических моделей для это задачи,
+	\item разработан и проанализирован алгоритм извлечения описаний событий из социальной сети Твиттер на основе иерархического процесса Дирихле,
+	\item алгоритм был реализован, параметры подобраны эксперементальным путем,
+	\item тестирование показало, что алгоритм успешно распознает события, имеющиеся во входных данных.
+	\end{itemize}
 \end{frame}
 
 \end{document}

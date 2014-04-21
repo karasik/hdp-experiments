@@ -2,6 +2,8 @@ package net.msusevastopol.math.ypys.hdp;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Map;
 
 import net.msusevastopol.math.ypys.utils.CollectionUtils;
@@ -48,26 +50,36 @@ public class FrequencyOverTime
 
 	public double getMean()
 	{
-		double result = 0, sum = 0;
+		BigDecimal result = BigDecimal.ZERO;
+		long sum = 0;
 		for (int i = 0; i < frequency.length; i++)
 		{
-			result += frequency[i] * i;
+			result = result.add(BigDecimal.valueOf((long) frequency[i] * i));
 			sum += frequency[i];
 		}
-		return result / sum;
+		return result.divide(BigDecimal.valueOf(sum), 50, RoundingMode.HALF_UP)
+				.doubleValue();
 	}
 
 	public double getSD2()
 	{
 		double mean = getMean();
-		double result = 0;
-		double sum = 0;
+		BigDecimal result = BigDecimal.ZERO;
+		long sum = 0;
+		long max = 0;
 		for (int i = 0; i < frequency.length; i++)
 		{
-			result += frequency[i] * (i - mean) * (i - mean);
+			if (frequency[i] <= 50)
+				continue;
+
+			BigDecimal tmp = BigDecimal.valueOf(i - mean);
+			result = result.add(BigDecimal.valueOf(frequency[i]).multiply(tmp)
+					.multiply(tmp));
 			sum += frequency[i];
+			max = Math.max(frequency[i], max);
 		}
-		return result / sum;
+		return result.divide(BigDecimal.valueOf(sum), 50, RoundingMode.HALF_UP)
+				.doubleValue() / max;
 	}
 
 	public Map<IDate, Integer> getMapping()

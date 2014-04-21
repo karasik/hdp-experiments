@@ -29,7 +29,7 @@ public class Main
 		IDate[] result = new MaxPeakDetector(n, 9).detectPeaks(freq);
 		int index = 1;
 		
-		result = new IDate[]{new Date(27, 0)};
+//		result = new IDate[]{new Date(17, 2), new Date(26, 5), new Date(27, 0)};
 		
 		FrequencyOverTime[] results = new FrequencyOverTime[n];
 		
