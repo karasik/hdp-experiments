@@ -29,7 +29,7 @@ public class Main
 		IDate[] result = new MaxPeakDetector(n, 9).detectPeaks(freq);
 		int index = 1;
 		
-//		result = new IDate[]{new Date(26, 5)};
+		result = new IDate[]{new Date(27, 0)};
 		
 		FrequencyOverTime[] results = new FrequencyOverTime[n];
 		
@@ -37,7 +37,7 @@ public class Main
 		{
 			System.out.println("Found peak #" + index + ": " + date);
 			FrequencyOverWords keywords = FrequencyOverWords.getFromCorpus(
-					corpus, null, date, 1);
+					corpus, null, date, 0);
 
 			String[] topWords = keywords.getTopWords(FILENAME_TOP_COUNT);
 			System.out.println("Keywords for the peak: "

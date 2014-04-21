@@ -23,6 +23,17 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Введение}
+  Цель работы:
+  \begin{itemize}
+	\item исследовать существующие подходы по извлечению описаний событий из сообщений пользователей, выделить возникающие проблемы и рассмотреть возможные методы их решения,
+	\item исследовать возможность применения тематических моделей для решения задачи выявления событий,
+	\item разработать метод для извлечения описаний событий из сообщений пользователей сети Твиттер на основе иерархического процесса Дирихле,
+	\item протестировать работу алгоритма на реальных данных.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
   \frametitle{Постановка задачи}
   Данные:
   \begin{itemize}
@@ -54,16 +65,56 @@
 \begin{frame}
   \frametitle{Схема алгоритма}
   Составные части:
-  \begin{itemize}
+  \begin{enumerate}  
   \item нахождение максимума в частотной функции, который будет соответствовать событию,
   \item извлечение ключевых слов, характерных этому максимуму,
   \item применение модели HDP с частичным обучением для того чтобы выделить все сообщения этой темы,
   \item проверка насколько полученный результат соответствует новому событию.
-  \end{itemize}
+  \end{enumerate}
 \end{frame}
 
 \begin{frame}
   \frametitle{Результаты}
+  Данные: 240 тысяч сообщений с 4 июня по 1 июля 2013 года, содержащие хэштег \#texas.
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=5.0cm]{all-freq.eps}
+  \includegraphics[width=5.0cm]{all-freq-scaled.eps}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Результаты}
+  Данные: 240 тысяч сообщений с 4 июня по 1 июля 2013 года, содержащие хэштег \#texas.
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=5.0cm]{all-freq.eps}
+  \includegraphics[width=5.0cm]{all-freq-scaled.eps}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Результаты}
+ Шаг 1: выделение экстремумов.
+ \begin{figure}[H]
+  \centering
+  \includegraphics[width=10.0cm]{all-freq-labeled-1.eps}
+  \label{fig:all-freq-labeled}
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Результаты}
+\begin{table}
+\begin{tabular}{r | l}
+\#1 & year, read, prison, dragon, amazon, \\
+\#2 & sb5, standwithwendi, talk, made, histori \\
+\#3 & houston, california, england, artist, rt \\
+\#4 & execut, 500th, mccarthi, kimberli, 1976 \\
+\#5 & florida, z1, america, usa, bahrain \\
+\#6 & houston, california, rt, watch, england \\
+\end{tabular}
+\end{table}	
 \end{frame}
 
 \begin{frame}
