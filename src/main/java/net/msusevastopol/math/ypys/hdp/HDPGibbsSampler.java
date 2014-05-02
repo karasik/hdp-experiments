@@ -29,7 +29,9 @@ import net.msusevastopol.math.ypys.utils.ProbUtils;
  * 
  * For other known implementations see README.txt
  * 
- * @author <a href="mailto:arnim.bleier+hdp@gmail.com">Arnim Bleier</a>
+ * @author <a href="mailto:arnim.bleier+hdp@gmail.com">Arnim Bleier</a>;
+ *         Modified by Yukhym Pyshnohraiev.
+ * 
  */
 public class HDPGibbsSampler implements Serializable
 {
