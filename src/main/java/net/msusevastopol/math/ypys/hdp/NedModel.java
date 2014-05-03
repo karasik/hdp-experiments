@@ -9,7 +9,7 @@ import net.msusevastopol.math.ypys.utils.CollectionUtils;
 public class NedModel
 {
 	private static int N_LAST = 20000;
-	private static double TRESHOLD = 0.95;
+	private static double TRESHOLD = 0.7;
 
 	private int[][] documents;
 	private int vocabularySize;
@@ -86,7 +86,7 @@ public class NedModel
 
 			weights[d] = weight;
 
-			if (d < nLast)
+			if (d < nLast || documents[d].length < 3)
 				continue;
 			boolean isNew = true;
 
@@ -112,26 +112,26 @@ public class NedModel
 				if (1 - dotProd < treshold)
 				{
 					isNew = false;
-					
-//					System.out.println(corpus.getDocuments().get(d));
-//					System.out.println(corpus.getDocuments().get(q));
-//					System.out.println(dotProd);
-					
+
+					// System.out.println(corpus.getDocuments().get(d));
+					// System.out.println(corpus.getDocuments().get(q));
+					// System.out.println(dotProd);
+
 					break;
 				}
 
-//				System.out.println(corpus.getDocuments().get(d));
-//				System.out.println(corpus.getDocuments().get(q));
-//				System.out.println(dotProd);
+				// System.out.println(corpus.getDocuments().get(d));
+				// System.out.println(corpus.getDocuments().get(q));
+				// System.out.println(dotProd);
 			}
 
 			if (isNew)
 			{
 				result.getDocuments().add(corpus.getDocuments().get(d));
-//				System.out.println(corpus.getDocuments().get(d));
 			}
-			
-			if (d % 100 == 0) System.out.println(d + " : " + result.getDocuments().size());
+
+			if (d % 100 == 0)
+				System.out.println(d + " : " + result.getDocuments().size());
 		}
 
 		return result;

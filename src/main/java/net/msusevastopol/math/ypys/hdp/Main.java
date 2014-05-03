@@ -21,8 +21,10 @@ public class Main
 		NedModel ned = new NedModel(corpus);
 		ICorpus events = ned.run();
 		
+		events.save(Filename.NED_FILE);
 		FrequencyOverTime freq = new FrequencyOverTime(events);
 		freq.save(Filename.getPlotOutput("ned"));
+		
 		
 		return;
 		/*
@@ -125,5 +127,6 @@ public class Main
 		private static final String INPUT_EX = "data/inputEx.txt";
 		private static final String PLOT_OUTPUT = "data/out/plotOutput";
 		private static final String DOCUMENT_TO_TOPIC_ASSIGNMENT = "data/out/DocumentToTopicAssignmentEx";
+		public static final String NED_FILE = "data/out/NedAssignment";
 	}
 }
