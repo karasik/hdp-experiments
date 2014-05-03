@@ -19,7 +19,11 @@ public class Main
 		ICorpus corpus = new Corpus(Filename.INPUT_EX);
 
 		NedModel ned = new NedModel(corpus);
-		ned.run();
+		ICorpus events = ned.run();
+		
+		FrequencyOverTime freq = new FrequencyOverTime(events);
+		freq.save(Filename.getPlotOutput("ned"));
+		
 		return;
 		/*
 

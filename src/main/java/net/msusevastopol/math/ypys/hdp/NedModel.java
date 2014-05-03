@@ -8,8 +8,8 @@ import net.msusevastopol.math.ypys.utils.CollectionUtils;
 
 public class NedModel
 {
-	private static int N_LAST = 1000;
-	private static double TRESHOLD = 0.3;
+	private static int N_LAST = 20000;
+	private static double TRESHOLD = 0.95;
 
 	private int[][] documents;
 	private int vocabularySize;
@@ -36,16 +36,13 @@ public class NedModel
 			for (int w = 0; w < documentLength; w++)
 			{
 				String word = corpus.getDocuments().get(d).getWords()[w];
-				if (wordToCode.containsKey(word))
-				{
-					documents[d][w] = wordToCode.get(word);
-				}
-				else
+				if (!wordToCode.containsKey(word))
 				{
 					wordToCode.put(word, vocabularySize);
 					codeToWord.put(vocabularySize, word);
 					vocabularySize++;
 				}
+				documents[d][w] = wordToCode.get(word);
 			}
 		}
 	}
@@ -55,20 +52,20 @@ public class NedModel
 		this(corpus, N_LAST, TRESHOLD);
 	}
 
-	public IDocument[] run()
+	public ICorpus run()
 	{
-		List<IDocument> result = CollectionUtils.newList();
+		ICorpus result = new Corpus();
 		int[] df = new int[vocabularySize];
 		Map<Integer, Double>[] weights = new Map[documents.length];
 		for (int d = 0; d < documents.length; d++)
 		{
 			Map<Integer, Double> weight = CollectionUtils.newMap();
-			double z = 0;
 
 			Set<Integer> words = CollectionUtils.newSet();
 			for (int word : documents[d])
 				words.add(word);
 
+			double z = 0;
 			for (int word : words)
 			{
 				int tf = 0;
@@ -78,7 +75,7 @@ public class NedModel
 
 				df[word]++;
 
-				double tfidf = tf * Math.log(d / df[word]);
+				double tfidf = tf * Math.log((d + 2) / df[word]);
 				weight.put(word, tfidf);
 				z += tfidf * tfidf;
 			}
@@ -112,20 +109,31 @@ public class NedModel
 					dotProd += dv * qv;
 				}
 
-				if (1 - dotProd > treshold)
+				if (1 - dotProd < treshold)
 				{
 					isNew = false;
+					
+//					System.out.println(corpus.getDocuments().get(d));
+//					System.out.println(corpus.getDocuments().get(q));
+//					System.out.println(dotProd);
+					
 					break;
 				}
+
+//				System.out.println(corpus.getDocuments().get(d));
+//				System.out.println(corpus.getDocuments().get(q));
+//				System.out.println(dotProd);
 			}
 
 			if (isNew)
 			{
-				result.add(corpus.getDocuments().get(d));
-				System.out.println(corpus.getDocuments().get(d));
+				result.getDocuments().add(corpus.getDocuments().get(d));
+//				System.out.println(corpus.getDocuments().get(d));
 			}
+			
+			if (d % 100 == 0) System.out.println(d + " : " + result.getDocuments().size());
 		}
 
-		return null;
+		return result;
 	}
 }

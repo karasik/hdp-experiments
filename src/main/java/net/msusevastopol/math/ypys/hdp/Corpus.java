@@ -19,7 +19,11 @@ public class Corpus implements ICorpus
 	 * [THEME) ]WORD1 WORD2 ... WORDN | DAY HOUR | AUTHOR
 	 */
 
-	private List<IDocument> documents;
+	private List<IDocument> documents = CollectionUtils.newList();
+
+	public Corpus()
+	{
+	}
 
 	public Corpus(String filename)
 	{
@@ -65,7 +69,6 @@ public class Corpus implements ICorpus
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				new FileInputStream(filename)));
 
-		documents = CollectionUtils.newList();
 		while (in.ready())
 		{
 			String line = in.readLine();
