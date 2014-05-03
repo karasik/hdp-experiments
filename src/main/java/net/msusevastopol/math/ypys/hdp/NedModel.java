@@ -9,10 +9,11 @@ import net.msusevastopol.math.ypys.utils.CollectionUtils;
 public class NedModel
 {
 	private static int N_LAST = 1000;
-	private static double TRESHOLD = 10;
+	private static double TRESHOLD = 0.3;
 
 	private int[][] documents;
 	private int vocabularySize;
+	private ICorpus corpus;
 
 	private Map<Integer, String> codeToWord = CollectionUtils.newMap();
 	private Map<String, Integer> wordToCode = CollectionUtils.newMap();
@@ -24,6 +25,7 @@ public class NedModel
 	{
 		this.nLast = nLast;
 		this.treshold = treshold;
+		this.corpus = corpus;
 
 		documents = new int[corpus.getDocuments().size()][];
 		vocabularySize = 0;
@@ -57,15 +59,16 @@ public class NedModel
 	{
 		List<IDocument> result = CollectionUtils.newList();
 		int[] df = new int[vocabularySize];
-		double[][] weights = new double[documents.length][];
+		Map<Integer, Double>[] weights = new Map[documents.length];
 		for (int d = 0; d < documents.length; d++)
 		{
 			Map<Integer, Double> weight = CollectionUtils.newMap();
 			double z = 0;
-			
+
 			Set<Integer> words = CollectionUtils.newSet();
-			for (int word : documents[d]) words.add(word);
-			
+			for (int word : documents[d])
+				words.add(word);
+
 			for (int word : words)
 			{
 				int tf = 0;
@@ -74,13 +77,15 @@ public class NedModel
 						tf++;
 
 				df[word]++;
-				weight.put(word] = tf * Math.log(d / df[word]);
-				z += weight[word] * weight[word];
+
+				double tfidf = tf * Math.log(d / df[word]);
+				weight.put(word, tfidf);
+				z += tfidf * tfidf;
 			}
 
 			z = Math.sqrt(z);
-			for (int w = 0; w < documents[d].length; w++)
-				weight[w] /= z;
+			for (int word : weight.keySet())
+				weight.put(word, weight.get(word) / z);
 
 			weights[d] = weight;
 
@@ -99,8 +104,25 @@ public class NedModel
 
 				for (Integer word : sharedWords)
 				{
-					
+					double dv = CollectionUtils.getDefault(weights[d], word,
+							0.0);
+					double qv = CollectionUtils.getDefault(weights[q], word,
+							0.0);
+
+					dotProd += dv * qv;
 				}
+
+				if (1 - dotProd > treshold)
+				{
+					isNew = false;
+					break;
+				}
+			}
+
+			if (isNew)
+			{
+				result.add(corpus.getDocuments().get(d));
+				System.out.println(corpus.getDocuments().get(d));
 			}
 		}
 

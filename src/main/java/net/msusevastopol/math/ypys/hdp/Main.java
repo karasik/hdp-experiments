@@ -17,6 +17,12 @@ public class Main
 	public static void main(String[] args) throws IOException
 	{
 		ICorpus corpus = new Corpus(Filename.INPUT_EX);
+
+		NedModel ned = new NedModel(corpus);
+		ned.run();
+		return;
+		/*
+
 		// HDPGibbsSampler hdp = new HDPGibbsSampler(corpus);
 		// hdp.run(50);
 		// corpus.save(Filename.DOCUMENT_TO_TOPIC_ASSIGNMENT);
@@ -25,14 +31,15 @@ public class Main
 		freq.save(Filename.getPlotOutput("all"));
 
 		int n = 6;
-		
+
 		IDate[] result = new MaxPeakDetector(n, 9).detectPeaks(freq);
 		int index = 1;
-		
-//		result = new IDate[]{new Date(17, 2), new Date(26, 5), new Date(27, 0)};
-		
+
+		// result = new IDate[]{new Date(17, 2), new Date(26, 5), new Date(27,
+		// 0)};
+
 		FrequencyOverTime[] results = new FrequencyOverTime[n];
-		
+
 		for (IDate date : result)
 		{
 			System.out.println("Found peak #" + index + ": " + date);
@@ -49,17 +56,17 @@ public class Main
 
 			for (int i = 0; i < ADD_DOCS; i++)
 				corpus.addAdditionalDocument(additionalDocument);
-			 HDPGibbsSampler hdp = new HDPGibbsSampler(corpus);
-			 hdp.run(HDP_ITERATIONS);
+			HDPGibbsSampler hdp = new HDPGibbsSampler(corpus);
+			hdp.run(HDP_ITERATIONS);
 			String suffix = date.toShortString();
 			corpus.save(Filename.getDocumentsToTopicAssignment(suffix));
 
-			 hdp.removeAdditional();
+			hdp.removeAdditional();
 
-			 List<String> topTopicWords = hdp.getTopTopicWords(1,
-			 KEYWORDS_TO_PRINT);
-			
-			 System.out.println("Topic  keywords are: " + topTopicWords);
+			List<String> topTopicWords = hdp.getTopTopicWords(1,
+					KEYWORDS_TO_PRINT);
+
+			System.out.println("Topic  keywords are: " + topTopicWords);
 
 			FrequencyOverTime freqOverTime = new FrequencyOverTime(corpus,
 					TARGET_TOPIC);
@@ -73,18 +80,20 @@ public class Main
 			corpus.clearAdditionalDocuments();
 
 			results[index - 1] = freqOverTime;
-			
+
 			index++;
 		}
-		
-		for (int i=0; i<results.length; i++)
+
+		for (int i = 0; i < results.length; i++)
 		{
-			for (int j=0; j<results.length; j++)
+			for (int j = 0; j < results.length; j++)
 			{
-				System.out.print(results[i].normalizedDotProduct(results[j]) + " ");
+				System.out.print(results[i].normalizedDotProduct(results[j])
+						+ " ");
 			}
 			System.out.println();
 		}
+		*/
 	}
 
 	private static class Filename
