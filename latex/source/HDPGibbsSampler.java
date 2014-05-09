@@ -7,7 +7,7 @@
 package net.msusevastopol.math.ypys.hdp;
 
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,8 +40,6 @@ public class HDPGibbsSampler implements Serializable
 		return corpus.getDocuments().get(d).isAdditional();
 	}
 
-	private PrintWriter log;
-
 	private static final long serialVersionUID = 1L;
 	private double beta = 0.5; // default only
 	private double gamma = 2.0;
@@ -64,20 +62,19 @@ public class HDPGibbsSampler implements Serializable
 
 	private ICorpus corpus;
 
-	public HDPGibbsSampler(ICorpus corpus, PrintWriter log)
+	public HDPGibbsSampler(ICorpus corpus)
 	{
-		addInstances(corpus, log);
+		addInstances(corpus);
 	}
 
 	public void run(int maxIter) throws IOException
 	{
-		run(0, maxIter, log);
+		run(0, maxIter, System.out);
 		setTopicsToCorpus();
 	}
 
-	private void addInstances(ICorpus corpus, PrintWriter log)
+	private void addInstances(ICorpus corpus)
 	{
-		this.log = log;
 		this.corpus = corpus;
 		Map<String, Integer> codesAssignment = CollectionUtils.newMap();
 		codesToWords = CollectionUtils.newMap();
@@ -273,13 +270,14 @@ public class HDPGibbsSampler implements Serializable
 	 *            number of iterations to run
 	 * @param saveLag
 	 *            save interval
-	 * @param wordAssignmentsPrintWriter
-	 *            {@link WordAssignmentsPrintWriter}
-	 * @param topicsPrintWriter
-	 *            {@link TopicsPrintWriter}
+	 * @param wordAssignmentsWriter
+	 *            {@link WordAssignmentsWriter}
+	 * @param topicsWriter
+	 *            {@link TopicsWriter}
 	 * @throws IOException
 	 */
-	private void run(int shuffleLag, int maxIter, PrintWriter log)
+	private void run(int shuffleLag, int maxIter, PrintStream log)
+			throws IOException
 	{
 		for (int iter = 0; iter < maxIter; iter++)
 		{

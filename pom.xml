@@ -12,7 +12,7 @@
 
 	<name>Event detection task in Twitter</name>
 	<version>0.0.1-SNAPSHOT</version>
-	<description>Hierarchical Dirichlet Processes with Gibbs Sampling</description>
+	<description>Event detection from Twitter using semi-supervised HDP</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

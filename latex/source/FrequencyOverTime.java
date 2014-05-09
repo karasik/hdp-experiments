@@ -68,6 +68,7 @@ public class FrequencyOverTime
 	public double getSD2()
 	{
 		double mean = getMean();
+		System.out.println("Mean=" + mean);
 		BigDecimal result = BigDecimal.ZERO;
 		long sum = 0;
 		long max = 0;
