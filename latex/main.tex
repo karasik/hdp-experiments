@@ -24,7 +24,7 @@
 \clubpenalty=10000
 \widowpenalty=10000
 \usepackage[T2A]{fontenc}
-\usepackage{hyperref}
+%\usepackage{hyperref}
 \usepackage{psfrag}
 \usepackage{listings}
 
@@ -58,13 +58,15 @@
 \DeclareMathOperator{\DP}{DP}
 \DeclareMathOperator{\svert}{\,\vert\,}
 
-\usepackage[linesnumbered]{algorithm2e}
+\usepackage[linesnumbered, noline]{algorithm2e}
 
 \renewcommand{\AlCapSty}{}
 \renewcommand{\AlCapFnt}{}
 \renewcommand{\NlSty}{}
 \SetAlgoCaptionSeparator{.}
-%\renewcommand{\KwSty}{}
+
+%\SetVline{}
+\renewcommand{\KwSty}{}
 
 \SetKwInput{KwData}{Исходные параметры}
 \SetKwInput{KwResult}{Результат}
@@ -89,6 +91,19 @@
 \makeatletter
 \renewcommand\@biblabel[1]{#1.}
 \makeatother
+
+\titleformat*{\section}{\centering\Large\bfseries}
+\titleformat*{\subsection}{\normalsize}
+\titleformat*{\subsubsection}{\normalsize}
+%\titleformat*{\paragraph}{\large}
+%\titleformat*{\subparagraph}{\large}
+
+\usepackage[titles]{tocloft}
+%\renewcommand\cftpartnumwidth{5cm}
+%\titlecontents{section}[1.5em]{}{ \contentslabel{1.3em}  }{   }{ }[]
+%\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+%\setlength{\cftchapnumwidth}{1mm}
+%\renewcommand{\@pnumwidth}{0.8em}% default is 1.55em
 
 \begin{document}
 
@@ -124,11 +139,16 @@
 \end{center}
 \end{titlepage}
 
+\thispagestyle{empty}
 \begin{abstract}
 	В работе рассматривается задача извлечения описаний событий из потока сообщений пользователей сети Твиттер. Приведена постановка задачи. Рассмотрены особенности событий в сети Твиттер. Проанализированы существующие подходы к решению задачи извлечения событий. Предложен алгоритм на основе тематической модели HDP с модификацией частичного обучения. Описаны составляющие части алгоритма. Алгоритм реализован, приведен код программы, диаграмма классов и описание компонентов. Рассмотренна работа предложенного алгоритма на тестовых данных, показаны результаты. Найдена точность, полнота и F-мера разработанного алгоритма, показано что на тестовых данных предложенный алгоритм работает лучше, чем модификация существующего алгоритма New Event Detection. 
 \end{abstract}
 
-\tableofcontents\thispagestyle{empty}\newpage
+\newpage
+
+\tableofcontents
+%\makeatletter \renewcommand{\@dotsep}{10000} \makeatother
+\thispagestyle{empty}\newpage
 
 \addcontentsline{toc}{section}{Введение}
   \section*{Введение}
@@ -404,7 +424,7 @@
   Эта работа ставит перед собой задачу разработать алгоритм нахождения событий в потоке сообщений пользователей сети Твиттер. В качестве данных были использованы сообщения с 4 июня 2013 года по 1 июля 2013 года, содержащие в себе хэштег \#texas. Всего корпус включает порядка 240 тысяч сообщений и 1.5 миллиона слов. Приведем псевдокод алгоритма, а затем рассмотрим каждый шаг более подробно. Здесь и далее под частотной характеристикой сообщений подразумевается функция количества сообщений в час. 
   
   \begin{algorithm}[H]
-  	\SetAlgoLined
+  %    \SetAlgoLined
   	\KwData{множество сообщений $\Omega$, параметры алгоритма $M$, $L$, $l_D$, $J$, $R$, $\theta_{\simu}$,  $\hat{\sigma}_0$, $\theta_{spam}$ параметры для HDP модели}
 	\KwResult{для каждого события набор ключевых слов и частота сообщений по теме события}
   	в частотной характеристике сообщений из $\Omega$ найти $K$ экстремумов, пусть они соответствуют временам $t_1,t_2,\ldots,t_K$\; \label{alg:peaks-extraction}
@@ -442,7 +462,7 @@
   
   \begin{algorithm}[H]
   	\caption{Сэмплирование по Гиббсу}
-    \SetAlgoLined
+%    \SetAlgoLined
   	\KwData{множество документов $\Omega$, параметры для HDP модели $\alpha_0$, $\gamma$, $I$}
   	назначить всем словам внутреннюю и внешнюю тему $0$\;
   	\Repeat{\upshape{не прошло $I$ итераций}}{
@@ -466,7 +486,7 @@
   
   \begin{algorithm}[H]
   	\caption{Сэмплирование по Гиббсу с частичным обучением}
-    \SetAlgoLined
+%    \SetAlgoLined
   	\KwData{множество документов $\Omega$, параметры для HDP модели $\alpha_0$, $\gamma$, $k_0$, $I$}
   	назначить всем словам внутреннюю и внешнюю тему $0$\;
   	\Repeat{\upshape{не прошло $I$ итераций}}{
@@ -663,7 +683,7 @@
 	
 	Заметим, что для определения точности необходимо вручную проверить $n$ событий, выданных алгоритмом, и определить насколько они достоверные, а для определения полноты просмотреть все $\vert \Omega \vert$ сообщений и выделить из них события. В связи с этим, для того, чтобы упростить определение полноты алгоритма будем считать, что событие может содержаться в корпусе только в той точке, частота сообщений в которой является максимумом в некотором окне и величина частоты больше значения $\theta_{freq}$. Это предположение означает что нас интересуют только те события, которые активно обсуждались пользователями сети Твиттер. При тестировании решения $\theta_{freq}$ было взято средним значением частоты сообщений.
 	
-	Ниже указана таблица со значениями точности, полноты и F-меры для разработанного алгоритма и для NED. По таблице можно видеть что алгоритм \ref{main-algo} работает на данных сети Твиттер существенно лучше. Как было указано выше, NED плохо справляется с новыми словами, поэтому его точность на подобных данных очень мала.
+	Ниже указана таблица со значениями точности, полноты и F-меры для разработанного алгоритма и для NED. По таблице можно видеть что алгоритм \ref{main-algo} работает на данных сети Твиттер существенно лучше.
 	
 	\begin{table}[h]
 	\centering
