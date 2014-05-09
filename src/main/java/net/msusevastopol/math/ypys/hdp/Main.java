@@ -19,9 +19,14 @@ public class Main
 
 	public static void main(String[] args) throws IOException
 	{
+		PrintWriter log = new PrintWriter(System.out, true);
 		ICorpus corpus = new Corpus(Filename.INPUT_EX);
 		FrequencyOverTime freq = new FrequencyOverTime(corpus);
-		PrintWriter log = new PrintWriter(System.out, true);
+		NedModel ned = new NedModel(corpus, log);
+		
+		ICorpus nedResult = ned.run();
+		nedResult.save(Filename.NED_FILE);
+		
 
 		int n = 30;
 		IDate[] result = new MaxPeakDetector(n, 9).detectPeaks(freq);
