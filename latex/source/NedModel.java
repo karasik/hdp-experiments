@@ -1,5 +1,6 @@
 package net.msusevastopol.math.ypys.hdp;
 
+import java.io.PrintWriter;
 import java.util.Map;
 import java.util.Set;
 
@@ -7,8 +8,10 @@ import net.msusevastopol.math.ypys.utils.CollectionUtils;
 
 public class NedModel
 {
-	private static int N_LAST = 20000;
-	private static double TRESHOLD = 0.7;
+	private PrintWriter log;
+
+	private static int N_LAST = 10000;
+	private static double TRESHOLD = 0.95;
 
 	private int[][] documents;
 	private int vocabularySize;
@@ -20,8 +23,9 @@ public class NedModel
 	private int nLast;
 	private double treshold;
 
-	public NedModel(ICorpus corpus, int nLast, double treshold)
+	public NedModel(ICorpus corpus, PrintWriter log, int nLast, double treshold)
 	{
+		this.log = log;
 		this.nLast = nLast;
 		this.treshold = treshold;
 		this.corpus = corpus;
@@ -46,9 +50,9 @@ public class NedModel
 		}
 	}
 
-	public NedModel(ICorpus corpus)
+	public NedModel(ICorpus corpus, PrintWriter log)
 	{
-		this(corpus, N_LAST, TRESHOLD);
+		this(corpus, log, N_LAST, TRESHOLD);
 	}
 
 	public ICorpus run()
@@ -85,7 +89,7 @@ public class NedModel
 
 			weights[d] = weight;
 
-			if (d < nLast || documents[d].length < 3)
+			if (d < nLast || documents[d].length <= 3)
 				continue;
 			boolean isNew = true;
 
@@ -121,7 +125,7 @@ public class NedModel
 			}
 
 			if (d % 100 == 0)
-				System.out.println(d + " : " + result.getDocuments().size());
+				log.println(d + " : " + result.getDocuments().size());
 		}
 
 		return result;
