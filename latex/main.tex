@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper]{article}
+\documentclass[14pt,a4paper,oneside]{extarticle}
 \usepackage{amsmath, amsfonts}
 \usepackage[utf8]{inputenc}
 \usepackage[russian]{babel}
@@ -29,6 +29,8 @@
 \usepackage{psfrag}
 \usepackage{listings}
 
+\renewcommand{\baselinestretch}{1.0}
+
 \def\labelitemi{--}
 \usepackage[labelsep=period]{caption}
 
@@ -38,7 +40,7 @@
   belowskip=3mm,
   showstringspaces=false,
   columns=flexible,
-  basicstyle={\small\ttfamily},
+  basicstyle={\footnotesize\ttfamily},
   numbers=none,
   numberstyle=\tiny\color{gray},
   %keywordstyle=\color{blue},
@@ -564,7 +566,7 @@
 
 	 \begin{figure}[H]
 	  \centering
-	  \includegraphics[width=14cm]{all-freq-labeled-1.eps}
+	  \includegraphics[width=13cm]{all-freq-labeled-1.eps}
 	  \caption{График частоты сообщений с отмеченными экстремумами}
 	  \label{fig:all-freq-labeled}
 	  \end{figure}
@@ -673,10 +675,10 @@
 	\begin{tabular}{| l | l | l |}
 	\hline
 	 № & Ключевые слова & Вызвавшее событие \\ \hline
-	1 & \begin{tabular}{l} year, read, prison, dragon, \\ amazon, written, bestseller \end{tabular} & \begin{tabular}{l} Написанная в техасской тюрьме книга \\ The Sword and the Dragon является \\ бестселлером на Amazon уже более трех \\ лет. \end{tabular} \\ \hline
-	2 & \begin{tabular}{l} sb5, standwithwendi, abort, \\ senat \end{tabular} & \begin{tabular}{l} Обсуждение сенатом закона по запрету \\ абортов, который носит название Senate \\ Bill 5. Wendi Davis ---  политик, которая \\ боролась с принятием этого закона.  \end{tabular} \\ \hline
-	3 & \begin{tabular}{l} houston, california, england, \\ artist, rt, watch, defjam \end{tabular} & \begin{tabular}{l} Хип хоп исполнитель из Хьюстон Devin \\ the Dude объявил, что его восьмой \\ студийный альбом будет называться \\ One for the Road и будет выпущен в \\ продажу в сентябре 2013 года. Альбом \\ будет выпущен лейблом Def Jam \\ Recordings.\end{tabular} \\ \hline
-	4 & \begin{tabular}{l} execut, 500th, mccarthi, \\ kimberli, 1976\end{tabular} & \begin{tabular}{l} В штате Техас приведен в исполнение \\ 500-й по счету смертный приговор. \\ Смертная казнь имеет место с 1976 года.\end{tabular} \\ \hline
+	1 & \begin{tabular}{l} year, read, prison, \\ dragon, amazon, \\ written, bestseller \end{tabular} & \begin{tabular}{l} Написанная в техасской тюрьме книга \\ The Sword and the Dragon является \\ бестселлером на Amazon уже более трех \\ лет. \end{tabular} \\ \hline
+	2 & \begin{tabular}{l} sb5, standwithwendi, \\ abort, senat \end{tabular} & \begin{tabular}{l} Обсуждение сенатом закона по запрету \\ абортов, который носит название Senate \\ Bill 5. Wendi Davis ---  политик, которая \\ боролась с принятием этого закона.  \end{tabular} \\ \hline
+	3 & \begin{tabular}{l} houston, california, \\ england, artist, rt, \\ watch, defjam \end{tabular} & \begin{tabular}{l} Хип хоп исполнитель из Хьюстон Devin \\ the Dude объявил, что его восьмой \\ студийный альбом будет называться \\ One for the Road и будет выпущен в \\ продажу в сентябре 2013 года. Альбом \\ будет выпущен лейблом Def Jam \\ Recordings.\end{tabular} \\ \hline
+	4 & \begin{tabular}{l} execut, 500th, \\ mccarthi, kimberli, \\ 1976\end{tabular} & \begin{tabular}{l} В штате Техас приведен в исполнение \\ 500-й по счету смертный приговор. \\ Смертная казнь имеет место с 1976 года.\end{tabular} \\ \hline
 	\end{tabular}
 	
 	
@@ -715,13 +717,13 @@
 	
 	Пусть алгоритм на выходе выдал информацию об $n$ найденных событиях, из которых $k$ событий определены верно. Тогда точностью алгоритма будет называться величина $p = k/n \in [0,\, 1]$. 
 	
-	Для корректного сравнения алгоритмов помимо точности, необходимо использовать полноту. Пусть в корпусе $\Omega$ содержится информация об $m$ событиях, из них $l$ событий были успешно отмечены алгоритмом. Тогда полнотой алгоритма называется отношение $r = l/m \in [0,\, 1]$. F-мерой алгоритма называется среднее гармоническое точности и полноты (считается, что $p \cdot q > 0$):
+	Для корректного сравнения алгоритмов помимо точности, необходимо использовать полноту. Пусть в корпусе $\Omega$ содержится информация об $m$ событиях, из них $l$ событий были успешно отмечены алгоритмом. Тогда полнотой алгоритма называется отношение $r = l/m \in [0,\, 1]$. F-мерой алгоритма называется взвешенное среднее гармоническое точности и полноты (считается, что $p + r > 0$):
 	
 	\begin{equation}
-	F = \left(\frac{1}{p} + \frac{1}{r}\right)^{-1} = \left( \frac{n}{k} + \frac{m}{l} \right)^{-1}.
+	F = \frac{2pr}{p + r}.
 	\end{equation}
 	
-	Очевидно, что чем выше значения $p$, $q$ и $F$ показывает алгоритм на определенных данных, тем лучше он работает на этих данных.
+	Очевидно, что чем выше значения $p$, $r$ и $F$ показывает алгоритм на определенных данных, тем лучше он работает на этих данных.
 	
 	Заметим, что для определения точности необходимо вручную проверить $n$ событий, выданных алгоритмом, и определить насколько они достоверные, а для определения полноты просмотреть все $\vert \Omega \vert$ сообщений и выделить из них события. В связи с этим, для того, чтобы упростить определение полноты алгоритма будем считать, что событие может содержаться в корпусе только в той точке, частота сообщений в которой является максимумом в некотором окне и величина частоты больше значения $\theta_{freq}$. Это предположение означает что нас интересуют только те события, которые активно обсуждались пользователями сети Твиттер. При тестировании решения $\theta_{freq}$ было взято средним значением частоты сообщений.
 	
@@ -732,8 +734,8 @@
 	\caption{Оценка предложенного алгоритма и алгоритма New event detection на имеющихся данных}
 	\begin{tabular}{ l l l l}
 	Алгоритм & Точность & Полнота & F-мера \\ \hline
-	Алгоритм \ref{main-algo} & 0.8 & 1.0 & 0.44 \\ 
-	NED & 0.01 & 0.8 & 0.01 \\ 
+	Алгоритм \ref{main-algo} & 0.8 & 1.0 & 0.89 \\ 
+	NED & 0.01 & 0.8 & 0.02 \\ 
 	\end{tabular}
 	\end{table}
 	
