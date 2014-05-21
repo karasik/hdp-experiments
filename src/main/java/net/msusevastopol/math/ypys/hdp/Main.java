@@ -22,10 +22,10 @@ public class Main
 		PrintWriter log = new PrintWriter(System.out, true);
 		ICorpus corpus = new Corpus(Filename.INPUT_EX);
 		FrequencyOverTime freq = new FrequencyOverTime(corpus);
-		NedModel ned = new NedModel(corpus, log);
-		
-		ICorpus nedResult = ned.run();
-		nedResult.save(Filename.NED_FILE);
+//		NedModel ned = new NedModel(corpus, log);
+//		
+//		ICorpus nedResult = ned.run();
+//		nedResult.save(Filename.NED_FILE);
 		
 
 		int n = 30;
